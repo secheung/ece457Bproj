@@ -9,6 +9,20 @@ try:
 except:
     have_Gnuplot = 0
 
+companies = [
+    {"name": "Acme Inc",
+     "salary": 55,
+     "employees": 150,
+     "reputation": 7.5},
+    {"name": "Smith Consulting",
+     "salary": 90,
+     "employees": 150,
+     "reputation": 2.3},
+    {"name": "John Engineering",
+     "employees": 4,
+     "salary": 35,
+     "reputation": 9}]
+
 def generateDocs(FuzzyController):
     system = FuzzyController.getFuzzySystem()
     from fuzzy.doc.plot.gnuplot import doc
@@ -24,7 +38,7 @@ def main(argv):
     except getopt.GetoptError:
         print 'main.py -p'
         sys.exit(2)
-        
+
     controller = Controller();
 
     for opt, arg in opts:
@@ -35,9 +49,9 @@ def main(argv):
             generateDocs(controller)
             sys.exit(0)
 
-    res = controller.calculate(20, 100, 0.5)
-    print res
+    for company in companies:
+        res = controller.calculate(company["employees"], company["salary"], company["reputation"])
+        print company["name"] + ": " + str(res)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
