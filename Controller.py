@@ -66,6 +66,7 @@ class Controller(object):
                               Input(s.variables['input_pay'].adjectives["Ok"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             )
+
         rule2 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Good"],
             operator=Compound(Input(input_pay.adjectives["Good"])),
@@ -93,12 +94,10 @@ class Controller(object):
             CER=fuzzy.norm.Min.Min())
 
         rule6 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            adjective=self.system.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_employees.adjectives["Medium"]),
-                              Compound(FuzzyAnd(),
-                                       Input(input_pay.adjectives["Bad"]),
-                                       Input(input_rep.adjectives["Unnoticed"]))),
+                              Input(input_rep.adjectives["Recognized"]),
+                              Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
         self.system.rules["rule1"] = rule1
