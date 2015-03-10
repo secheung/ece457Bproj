@@ -3,9 +3,6 @@ import fuzzy
 from fuzzy.InputVariable import InputVariable
 from fuzzy.OutputVariable import OutputVariable
 from fuzzy.Adjective import Adjective
-from fuzzy.set.Polygon import Polygon
-from fuzzy.set.Trapez import Trapez
-from fuzzy.set.Triangle import Triangle
 from fuzzy.fuzzify.Plain import Plain
 from fuzzy.defuzzify.COG import COG
 from fuzzy.defuzzify.MaxLeft import MaxLeft
@@ -39,9 +36,9 @@ class Controller(object):
                                         description="Number of Employees",
                                         min=1, max=100)
         self.system.variables["input_employees"] = input_employees
-        input_employees.adjectives["Small"] = Adjective(Trapez(1, 10, 1, 1, 1, 0))
-        input_employees.adjectives["Medium"] = Adjective(Trapez(10, 40, 5, 5, 1, 0))
-        input_employees.adjectives["Large"] = Adjective(Trapez(40, 100, 10, 10, 1, 0))
+        input_employees.adjectives["Small"] = Adjective(inputs.employee_small)
+        input_employees.adjectives["Medium"] = Adjective(inputs.employee_medium)
+        input_employees.adjectives["Large"] = Adjective(inputs.employee_large)
 
         # Input: Reputation
         input_rep = InputVariable(fuzzify=Plain(),
@@ -62,7 +59,7 @@ class Controller(object):
         Happiness.failsafe = 0.0 # let it output 0.0 if no COG available
 
         s = self.system
-        
+
         rule1 = Rule(
             adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),

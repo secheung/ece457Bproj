@@ -3,9 +3,10 @@ from fuzzy.InputVariable import InputVariable
 from fuzzy.Adjective import Adjective
 from fuzzy.set.Polygon import Polygon
 from fuzzy.fuzzify.Plain import Plain
+from fuzzy.set.Trapez import Trapez
 
 
-        # PAy
+# PAy
 pay_bad = Polygon()
 pay_bad.add(x =     0, y= 0.0)
 pay_bad.add(x =     1, y= 1.0)
@@ -33,3 +34,7 @@ high_rep = Polygon()
 high_rep.add(x = 3, y= 0.0)
 high_rep.add(x = 6, y = 1.0)
 high_rep.add(x = 10, y = 1.0)
+
+employee_small = Trapez(1, 20, 1, 50, 1, 0)
+employee_medium = Trapez(50, 100, 25, 25, 1, 0)
+employee_large = Trapez(100, 200, 20, 20, 1, 0)
