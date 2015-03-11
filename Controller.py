@@ -35,7 +35,9 @@ class Controller(object):
                                         user_pay["good_low"],
                                         user_pay["good_high"])
         input_pay.adjectives["Bad"] = Adjective(pay["bad"])
+        input_pay.adjectives["Alright"] = Adjective(pay["alright"])
         input_pay.adjectives["Ok"] = Adjective(pay["ok"])
+        input_pay.adjectives["Fine"] = Adjective(pay["fine"])
         input_pay.adjectives["Good"] = Adjective(pay["good"])
 
         # Input: Number of Employees
@@ -53,7 +55,9 @@ class Controller(object):
                                         min=1, max=100)
         self.system.variables["input_employees"] = input_employees
         input_employees.adjectives["Small"] = Adjective(employee["small"])
+	input_employees.adjectives["Smallish"] = Adjective(employee["smallish"])
         input_employees.adjectives["Medium"] = Adjective(employee["med"])
+	input_employees.adjectives["Largish"] = Adjective(employee["largish"])
         input_employees.adjectives["Large"] = Adjective(employee["large"])
 
         # Input: Reputation
@@ -64,6 +68,7 @@ class Controller(object):
                                   min=0, max=10)
         self.system.variables["input_rep"] = input_rep
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
+	input_rep.adjectives["Upcoming"] = Adjective(rep["med"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
         Happiness = OutputVariable(defuzzify=MaxLeft(),
@@ -72,7 +77,9 @@ class Controller(object):
         self.system.variables["happiness"] = Happiness
 
         Happiness.adjectives["Bad"] = Adjective(happiness.Happiness_bad)
+	Happiness.adjectives["Badish"] = Adjective(happiness.Happiness_badish)
         Happiness.adjectives["Med"] = Adjective(happiness.Happiness_med)
+	Happiness.adjectives["Goodish"] = Adjective(happiness.Happiness_goodish)
         Happiness.adjectives["Good"] = Adjective(happiness.Happiness_good)
         Happiness.failsafe = 0.0 # let it output 0.0 if no COG available
 
@@ -118,12 +125,32 @@ class Controller(object):
                               Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
+	#Granularity rules
+	rule7 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_rep.adjectives["Upcoming"]),
+                              Input(input_pay.adjectives["Fine"])),
+            CER=fuzzy.norm.Min.Min())
+
+	rule8 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_employees.adjectives["Smallish"]),
+                              Input(input_pay.adjectives["Alright"])),
+            CER=fuzzy.norm.Min.Min())
+
+
         self.system.rules["rule1"] = rule1
         self.system.rules["rule2"] = rule2
         self.system.rules["rule3"] = rule3
         self.system.rules["rule4"] = rule4
         self.system.rules["rule5"] = rule5
         self.system.rules["rule6"] = rule6
+
+	#Granularity rules
+        self.system.rules["rule7"] = rule7
+	self.system.rules["rule8"] = rule8
 
     def calculate(self, salary, employees, reputation):
         input_vals = {
