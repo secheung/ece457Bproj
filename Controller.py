@@ -17,7 +17,7 @@ import happiness
 
 
 class Controller(object):
-    def __init__(self):
+    def __init__(self, user):
         # create system object
         self.system = fuzzy.System.System()
 
@@ -27,26 +27,44 @@ class Controller(object):
                                   min=0, max=101)
         self.system.variables["input_pay"] = input_pay
 
-        input_pay.adjectives["Bad"] = Adjective(inputs.pay_bad)
-        input_pay.adjectives["Ok"] = Adjective(inputs.pay_ok)
-        input_pay.adjectives["Good"] = Adjective(inputs.pay_good)
+        user_pay = user["salary"]
+        pay = inputs.generate_pay(user_pay["bad_low"],
+                                        user_pay["bad_high"],
+                                        user_pay["ok_low"],
+                                        user_pay["ok_high"],
+                                        user_pay["good_low"],
+                                        user_pay["good_high"])
+        input_pay.adjectives["Bad"] = Adjective(pay["bad"])
+        input_pay.adjectives["Ok"] = Adjective(pay["ok"])
+        input_pay.adjectives["Good"] = Adjective(pay["good"])
 
         # Input: Number of Employees
+        user_size = user["employees"]
+        employee = inputs.generate_employee(
+            user_size["small_low"],
+            user_size["small_high"],
+            user_size["med_low"],
+            user_size["med_high"],
+            user_size["large_low"],
+            user_size["large_high"]
+        )
         input_employees = InputVariable(fuzzify=Plain(),
                                         description="Number of Employees",
                                         min=1, max=100)
         self.system.variables["input_employees"] = input_employees
-        input_employees.adjectives["Small"] = Adjective(inputs.employee_small)
-        input_employees.adjectives["Medium"] = Adjective(inputs.employee_medium)
-        input_employees.adjectives["Large"] = Adjective(inputs.employee_large)
+        input_employees.adjectives["Small"] = Adjective(employee["small"])
+        input_employees.adjectives["Medium"] = Adjective(employee["med"])
+        input_employees.adjectives["Large"] = Adjective(employee["large"])
 
         # Input: Reputation
+        user_rep = user["rep"]
+        rep = inputs.generate_rep(user_rep["low"], user_rep["high"])
         input_rep = InputVariable(fuzzify=Plain(),
                                   description="Reputation",
                                   min=0, max=10)
         self.system.variables["input_rep"] = input_rep
-        input_rep.adjectives["Unnoticed"] = Adjective(inputs.low_rep)
-        input_rep.adjectives["Recognized"] = Adjective(inputs.high_rep)
+        input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
+        input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
         Happiness = OutputVariable(defuzzify=MaxLeft(),
                                    description="Happiness",

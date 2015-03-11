@@ -23,6 +23,29 @@ companies = [
      "salary": 35,
      "reputation": 9}]
 
+users = [{
+    "salary": {
+        "bad_low": 25,
+        "bad_high": 35,
+        "ok_low": 40,
+        "ok_high": 50,
+        "good_low": 75,
+        "good_high": 100
+    },
+    "employees": {
+        "small_low": 1,
+        "small_high": 20,
+        "med_low": 50,
+        "med_high": 100,
+        "large_low": 200,
+        "large_high": 500
+    },
+    "rep": {
+        "low": 3,
+        "high": 8
+    }
+}]
+
 def generateDocs(FuzzyController):
     system = FuzzyController.getFuzzySystem()
     from fuzzy.doc.plot.gnuplot import doc
@@ -39,7 +62,7 @@ def main(argv):
         print 'main.py -p'
         sys.exit(2)
 
-    controller = Controller();
+    controller = Controller(users[0]);
 
     for opt, arg in opts:
         if opt == '-h':
