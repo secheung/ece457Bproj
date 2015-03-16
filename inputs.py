@@ -11,8 +11,9 @@ def generate_pay(bad_low, bad_high, ok_low, ok_high, good_low, good_high ):
     alright = (bad_high + ok_low)/2
     fine = (ok_high + good_low)/2
 
-    bad_slope = 5 if bad_low > 5 else 0
-    
+    bad_slope = 5
+    bad_low = bad_low if bad_low > 0 else 1    
+
     pay_bad = Polygon()
     pay_bad.add(x = 0.0, y= 0.0)
     pay_bad.add(x = bad_low, y= 1.0)
@@ -61,6 +62,7 @@ def generate_rep(low, high):
     med = (low + high)/2
 
     low_rep = Polygon()
+    low_rep.add(x = 0, y = 0.0)
     low_rep.add(x = 0, y = 1.0)
     low_rep.add(x = low, y = 1.0)
     low_rep.add(x = med, y = 0.0)

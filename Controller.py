@@ -88,23 +88,70 @@ class Controller(object):
         s = self.system
 
 	#Best - large companies with good pay and good reputation give good happiness i.e google
-        rule1 = Rule(
+        #rule1 = Rule(
+        #    adjective=s.variables["happiness"].adjectives["Good"],
+        #    operator=Compound(FuzzyAnd(),
+	#		      Compound(FuzzyAnd(),
+	#	                       Input(input_employees.adjectives["Large"]),
+	#	                       Input(input_pay.adjectives["Good"])),
+	#		      Input(input_rep.adjectives["Recognized"])
+	#		     ),
+        #   CER=fuzzy.norm.Min.Min())
+
+        rule1d1 = Rule(
             adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-			      Compound(FuzzyAnd(),
-		                       Input(input_employees.adjectives["Large"]),
-		                       Input(input_pay.adjectives["Good"])),
-			      Input(input_rep.adjectives["Recognized"])
+		              Input(input_employees.adjectives["Large"]),
+		              Input(input_pay.adjectives["Good"]),
+			     ),
+		     CER=fuzzy.norm.Min.Min())
+        rule1d2 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_employees.adjectives["Large"]),
+		              Input(input_rep.adjectives["Recognized"]),
+			     ),
+		     CER=fuzzy.norm.Min.Min())
+
+        rule1d3 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_rep.adjectives["Recognized"]),
+		              Input(input_pay.adjectives["Good"]),
+			     ),
+		     CER=fuzzy.norm.Min.Min())
+
+	#Worst - small companies with bad pay and bad reputation give bad happiness
+        #rule2 = Rule(
+        #    adjective=s.variables["happiness"].adjectives["Bad"],
+        #    operator=Compound(FuzzyAnd(),
+	#		      Compound(FuzzyAnd(),
+	#	                       Input(input_employees.adjectives["Small"]),
+	#	                       Input(input_pay.adjectives["Bad"])),
+	#		      Input(input_rep.adjectives["Unnoticed"])
+	#		     ),
+        #    CER=fuzzy.norm.Min.Min())
+
+        rule2d1 = Rule(
+            adjective=s.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_employees.adjectives["Small"]),
+		              Input(input_pay.adjectives["Bad"])
 			     ),
             CER=fuzzy.norm.Min.Min())
 
-	#Worst - small companies with bad pay and bad reputation give bad happiness
-        rule2 = Rule(
+        rule2d2 = Rule(
             adjective=s.variables["happiness"].adjectives["Bad"],
             operator=Compound(FuzzyAnd(),
-			      Compound(FuzzyAnd(),
-		                       Input(input_employees.adjectives["Small"]),
-		                       Input(input_pay.adjectives["Bad"])),
+		              Input(input_employees.adjectives["Small"]),
+			      Input(input_rep.adjectives["Unnoticed"])
+			     ),
+            CER=fuzzy.norm.Min.Min())
+
+        rule2d3 = Rule(
+            adjective=s.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_pay.adjectives["Bad"]),
 			      Input(input_rep.adjectives["Unnoticed"])
 			     ),
             CER=fuzzy.norm.Min.Min())
@@ -120,16 +167,40 @@ class Controller(object):
 
 	#street smart rules
 	#small company with good pay and good rep
-        rule4 = Rule(
+        #rule4 = Rule(
+        #    adjective=s.variables["happiness"].adjectives["Good"],
+        #    operator=Compound(FuzzyAnd(),
+	#		      Compound(FuzzyAnd(),
+	#	                       Input(input_employees.adjectives["Small"]),
+	#	                       Input(input_pay.adjectives["Good"])),
+	#		      Input(input_rep.adjectives["Recognized"])
+	#		     ),
+        #    CER=fuzzy.norm.Min.Min())
+	
+        rule4d1 = Rule(
             adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-			      Compound(FuzzyAnd(),
-		                       Input(input_employees.adjectives["Small"]),
-		                       Input(input_pay.adjectives["Good"])),
-			      Input(input_rep.adjectives["Recognized"])
+		              Input(input_employees.adjectives["Small"]),
+		              Input(input_pay.adjectives["Good"])
 			     ),
             CER=fuzzy.norm.Min.Min())
-	
+
+        rule4d2 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_employees.adjectives["Small"]),
+                              Input(input_rep.adjectives["Recognized"])
+			     ),
+            CER=fuzzy.norm.Min.Min())
+
+        rule4d3 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_pay.adjectives["Good"]),
+                              Input(input_rep.adjectives["Recognized"])
+			     ),
+            CER=fuzzy.norm.Min.Min())
+
 	#small company with no reputation is bad
         rule5 = Rule(
             adjective=s.variables["happiness"].adjectives["Bad"],
@@ -147,8 +218,17 @@ class Controller(object):
 			      Input(input_rep.adjectives["Recognized"])
 			     ),
             CER=fuzzy.norm.Min.Min())
+	
+	#med company with good pay is good
+        rule7 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_employees.adjectives["Medium"]),
+			      Input(input_pay.adjectives["Good"])
+			     ),
+            CER=fuzzy.norm.Min.Min())
 
-	#Granularity rules
+	#Granularity rules--------------------------------------------------------------------------
 	#pay over certain amount eventually stops producing happiness
 	rule20 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Goodish"],
@@ -162,35 +242,97 @@ class Controller(object):
 			 	  Input(input_pay.adjectives["Alright"]),
 				  Input(input_pay.adjectives["Ok"])
 				 ),
-            CER=fuzzy.norm.Min.Min())	
+            CER=fuzzy.norm.Min.Min())
 	
-
-	rule0 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Med"],
+        #extension of rule 4
+        rule22d1 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_employees.adjectives["Smallish"]),
-                              Input(input_pay.adjectives["Alright"])),
+		              Input(input_employees.adjectives["Smallish"]),
+		              Input(input_pay.adjectives["Good"])
+			     ),
             CER=fuzzy.norm.Min.Min())
 
-	rule0 = Rule(
+        rule22d2 = Rule(
+            adjective=s.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+		              Input(input_employees.adjectives["Largish"]),
+		              Input(input_pay.adjectives["Good"])
+			     ),
+            CER=fuzzy.norm.Min.Min())
+
+	#extension of rule2
+	rule23d1 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_employees.adjectives["Smallish"])),
+            CER=fuzzy.norm.Min.Min())
+
+	rule23d2 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_employees.adjectives["Smallish"])),
+            CER=fuzzy.norm.Min.Min())
+
+	#bad pay large company
+	rule24 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_employees.adjectives["Large"])),
+            CER=fuzzy.norm.Min.Min())
+
+	rule24d1 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Badish"],
             operator=Compound(FuzzyAnd(),
                               Input(input_pay.adjectives["Bad"]),
                               Input(input_employees.adjectives["Largish"])),
             CER=fuzzy.norm.Min.Min())
 
+	#rep vs pay
+	rule25d1 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Goodish"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Good"]),
+                              Input(input_rep.adjectives["Upcoming"])),
+            CER=fuzzy.norm.Min.Min())
+	
+	rule25d2 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Goodish"],
+            operator=Compound(FuzzyAnd(),
+                              Compound( FuzzyOr(),
+					Input(input_pay.adjectives["Alright"]),
+					Input(input_pay.adjectives["Bad"])
+                                      ),
+                              Input(input_rep.adjectives["Recognized"])),
+            CER=fuzzy.norm.Min.Min())
 
-        self.system.rules["rule1"] = rule1
-	self.system.rules["rule2"] = rule2
+        self.system.rules["rule1d1"] = rule1d1
+	self.system.rules["rule1d2"] = rule1d2
+	self.system.rules["rule1d3"] = rule1d3
+	self.system.rules["rule2d1"] = rule2d1
+	self.system.rules["rule2d2"] = rule2d2
+	self.system.rules["rule2d3"] = rule2d3
 	self.system.rules["rule3"] = rule3
-	self.system.rules["rule4"] = rule4
+	self.system.rules["rule4d1"] = rule4d1
+	self.system.rules["rule4d2"] = rule4d2
+	self.system.rules["rule4d3"] = rule4d3
 	self.system.rules["rule5"] = rule5
 	self.system.rules["rule6"] = rule6
-	#self.system.rules["rule7"] = rule7
+	self.system.rules["rule7"] = rule7
 
 	#Granularity rules start at 20
         self.system.rules["rule20"] = rule20
         self.system.rules["rule21"] = rule21
+	self.system.rules["rule22d1"] = rule22d1
+	self.system.rules["rule22d2"] = rule22d2
+	self.system.rules["rule23d1"] = rule23d1
+	self.system.rules["rule24"] = rule24
+	self.system.rules["rule24d1"] = rule24d1
+	self.system.rules["rule25d1"] = rule25d1
+	self.system.rules["rule25d2"] = rule25d2
 
     def calculate(self, salary, employees, reputation):
         input_vals = {

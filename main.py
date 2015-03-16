@@ -71,11 +71,14 @@ users = [{#0
 def generateDocs(FuzzyController):
     system = FuzzyController.getFuzzySystem()
     from fuzzy.doc.plot.gnuplot import doc
-    doc = doc.Doc("doc")
+    doc = doc.Doc("doc")    
     doc.createDoc(system)
-    doc.create2DPlot(system,"input_pay","happiness")
-    doc.create2DPlot(system,"input_rep","happiness")
-    doc.create2DPlot(system,"input_employees","happiness")
+    #doc.create2DPlot(system,"input_employees","happiness")
+    #doc.create2DPlot(system,"input_rep","happiness")
+    #doc.create2DPlot(system,"input_pay","happiness")
+    doc.create3DPlot(system,"input_pay","input_employees","happiness")
+    doc.create3DPlot(system,"input_rep","input_pay","happiness")
+    doc.create3DPlot(system,"input_rep","input_employees","happiness")
 
 def main(argv):
     try:
@@ -84,7 +87,7 @@ def main(argv):
         print 'main.py -p'
         sys.exit(2)
 
-    controller = Controller(users[0]);
+    controller = Controller(users[1]);
 
     for opt, arg in opts:
         if opt == '-h':
