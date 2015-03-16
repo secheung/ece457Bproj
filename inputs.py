@@ -48,7 +48,7 @@ def generate_pay(bad_low, bad_high, ok_low, ok_high, good_low, good_high ):
     pay_good.add(x =  good_low, y= 1.0)
     pay_good.add(x =  good_high, y= 1.0)
     # everything over good_high is still good
-    pay_good.add(x =  good_high + 50 , y= 1.0)
+    #pay_good.add(x =  good_high + 50 , y= 1.0)
 
     return {
         "bad": pay_bad,
@@ -67,11 +67,14 @@ def generate_rep(low, high):
     low_rep.add(x = low, y = 1.0)
     low_rep.add(x = med, y = 0.0)
 
-    med_slope = 3 if med > 3 else 0
+    med_slope_low = 1.0/(low-1) if low > 0 else 1/(low)
+    med_slope_high = 1.0/(high+1) if high < 10 else 1/(high)
+
+
     med_rep = Polygon()
-    med_rep.add(x = med - med_slope-1, y = 0.0)
-    med_rep.add(x = med + med_slope-1, y = 1.0)
-    med_rep.add(x = med + med_slope+1, y = 0.0)
+    med_rep.add(x = med - med_slope_low*med, y = 0.0)
+    med_rep.add(x = med, y = 1.0)
+    med_rep.add(x = med + med_slope_high*med, y = 0.0)
     
 
     high_rep = Polygon()
@@ -132,10 +135,10 @@ def generate_employee(small_low, small_high, med_low, med_high, large_low, large
     large_spread = 0
 
     employee_large = Polygon()
-    employee_large.add(x=large_low - 0.25*large_slope, y = 0 )
+    employee_large.add(x=large_low - large_slope, y = 0 )
     employee_large.add(x=large_low, y = 1 )
     employee_large.add(x=large_high, y = 1 )
-    employee_large.add(x=large_high + 2*large_slope, y = 0 )
+    #employee_large.add(x=large_high + 2*large_slope, y = 0 )
 
     return {
         "small": employee_small,
