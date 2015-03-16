@@ -23,28 +23,50 @@ companies = [
      "salary": 35,
      "reputation": 9}]
 
-users = [{
-    "salary": {
-        "bad_low": 25,
-        "bad_high": 35,
-        "ok_low": 40,
-        "ok_high": 50,
-        "good_low": 75,
-        "good_high": 100
-    },
-    "employees": {
-        "small_low": 1,
-        "small_high": 20,
-        "med_low": 50,
-        "med_high": 100,
-        "large_low": 200,
-        "large_high": 500
-    },
-    "rep": {
-        "low": 3,
-        "high": 8
-    }
-}]
+users = [{#0
+	    "salary": {
+		"bad_low": 0,
+		"bad_high": 10,
+		"ok_low": 30,
+		"ok_high": 50,
+		"good_low": 90,
+		"good_high": 100
+	    },
+	    "employees": {
+		"small_low": 1,
+		"small_high": 20,
+		"med_low": 35,
+		"med_high": 40,
+		"large_low": 50,
+		"large_high": 100
+	    },
+	    "rep": {
+		"low": 3,
+		"high": 4
+	    }
+    	},
+	{#1
+	    "salary": {
+		"bad_low": 25,
+		"bad_high": 35,
+		"ok_low": 40,
+		"ok_high": 50,
+		"good_low": 75,
+		"good_high": 100
+	    },
+	    "employees": {
+		"small_low": 1,
+		"small_high": 20,
+		"med_low": 50,
+		"med_high": 100,
+		"large_low": 200,
+		"large_high": 500
+	    },
+	    "rep": {
+		"low": 3,
+		"high": 8
+	    }
+    }]
 
 def generateDocs(FuzzyController):
     system = FuzzyController.getFuzzySystem()
@@ -75,6 +97,9 @@ def main(argv):
     for company in companies:
         res = controller.calculate(company["employees"], company["salary"], company["reputation"])
         print company["name"] + ": " + str(res)
+
+
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
