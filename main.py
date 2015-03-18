@@ -51,9 +51,12 @@ def generateDocs(FuzzyController):
     from fuzzy.doc.plot.gnuplot import doc
     doc = doc.Doc("doc")
     doc.createDoc(system)
-    doc.create2DPlot(system,"input_pay","happiness")
-    doc.create2DPlot(system,"input_rep","happiness")
-    doc.create2DPlot(system,"input_employees","happiness")
+    # doc.create2DPlot(system,"input_pay","happiness")
+    # doc.create2DPlot(system,"input_rep","happiness")
+    # doc.create2DPlot(system,"input_employees","happiness")
+    doc.create3DPlot(system,"input_rep","input_employees","happiness")
+    # doc.create3DPlot(system,"input_rep","input_pay","happiness")
+    # doc.create3DPlot(system,"input_employees","input_pay","happiness")
 
 def main(argv):
     try:
