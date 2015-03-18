@@ -29,11 +29,11 @@ class Controller(object):
 
         user_pay = user["salary"]
         pay = inputs.generate_pay(user_pay["bad_low"],
-                                        user_pay["bad_high"],
-                                        user_pay["ok_low"],
-                                        user_pay["ok_high"],
-                                        user_pay["good_low"],
-                                        user_pay["good_high"])
+                                  user_pay["bad_high"],
+                                  user_pay["ok_low"],
+                                  user_pay["ok_high"],
+                                  user_pay["good_low"],
+                                  user_pay["good_high"])
         input_pay.adjectives["Bad"] = Adjective(pay["bad"])
         input_pay.adjectives["Ok"] = Adjective(pay["ok"])
         input_pay.adjectives["Good"] = Adjective(pay["good"])
@@ -81,41 +81,85 @@ class Controller(object):
         rule1 = Rule(
             adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-                              Input(s.variables['input_pay'].adjectives["Ok"]),
+                              Input(s.variables['input_pay'].adjectives["Good"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             )
 
         rule2 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Good"],
-            operator=Compound(Input(input_pay.adjectives["Good"])),
-            CER=fuzzy.norm.Min.Min())
+            adjective=s.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(s.variables['input_pay'].adjectives["Bad"]),
+                              Input(s.variables['input_rep'].adjectives["Unnoticed"])),
+            )
 
         rule3 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Med"],
+            adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_employees.adjectives["Small"]),
-                              Input(input_pay.adjectives["Bad"])),
-            CER=fuzzy.norm.Min.Min())
+                              Input(s.variables['input_pay'].adjectives["Ok"]),
+                              Input(s.variables['input_rep'].adjectives["Recognized"])),
+            )
 
         rule4 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Bad"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_rep.adjectives["Unnoticed"]),
-                              Input(input_pay.adjectives["Bad"])),
+                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_employees.adjectives["Large"])),
             CER=fuzzy.norm.Min.Min())
 
         rule5 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Med"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_employees.adjectives["Large"]),
-                              Input(input_pay.adjectives["Ok"])),
+                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
         rule6 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Good"]),
+                              Input(input_employees.adjectives["Small"])),
+            CER=fuzzy.norm.Min.Min())
+
+        rule7 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Good"]),
+                              Input(input_employees.adjectives["Medium"])),
+            CER=fuzzy.norm.Min.Min())
+
+        rule8 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_pay.adjectives["Good"]),
+                              Input(input_employees.adjectives["Large"])),
+            CER=fuzzy.norm.Min.Min())
+
+        rule9 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_rep.adjectives["Unnoticed"]),
+                              Input(input_employees.adjectives["Small"])),
+            CER=fuzzy.norm.Min.Min())
+
+        rule10 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_rep.adjectives["Unnoticed"]),
+                              Input(input_employees.adjectives["Large"])),
+            CER=fuzzy.norm.Min.Min())
+
+        rule11 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Small"])),
+            CER=fuzzy.norm.Min.Min())
+
+        rule12 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Good"],
+            operator=Compound(FuzzyAnd(),
+                              Input(input_rep.adjectives["Recognized"]),
+                              Input(input_employees.adjectives["Large"])),
             CER=fuzzy.norm.Min.Min())
 
         self.system.rules["rule1"] = rule1
@@ -124,6 +168,12 @@ class Controller(object):
         self.system.rules["rule4"] = rule4
         self.system.rules["rule5"] = rule5
         self.system.rules["rule6"] = rule6
+        self.system.rules["rule7"] = rule7
+        self.system.rules["rule8"] = rule8
+        self.system.rules["rule9"] = rule9
+        self.system.rules["rule10"] = rule10
+        self.system.rules["rule11"] = rule11
+        self.system.rules["rule12"] = rule12
 
     def calculate(self, salary, employees, reputation):
         input_vals = {
