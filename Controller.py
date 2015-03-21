@@ -162,18 +162,18 @@ class Controller(object):
                               Input(input_employees.adjectives["Large"])),
             CER=fuzzy.norm.Min.Min())
 
-        self.system.rules["rule1"] = rule1
-        self.system.rules["rule2"] = rule2
-        self.system.rules["rule3"] = rule3
-        self.system.rules["rule4"] = rule4
-        self.system.rules["rule5"] = rule5
-        self.system.rules["rule6"] = rule6
-        self.system.rules["rule7"] = rule7
-        self.system.rules["rule8"] = rule8
-        self.system.rules["rule9"] = rule9
-        self.system.rules["rule10"] = rule10
-        self.system.rules["rule11"] = rule11
-        self.system.rules["rule12"] = rule12
+        self.system.rules["highpay_recognized"] = rule1 
+        self.system.rules["lowpay_unnoticed"] = rule2 
+        self.system.rules["medpay_recognized"] = rule3 
+        self.system.rules["lowpay_large"] = rule4 
+        self.system.rules["lowpay_small"] = rule5 
+        self.system.rules["highpay_small"] = rule6 
+        self.system.rules["highpay_med"] = rule7 
+        self.system.rules["highpay_large"] = rule8 
+        self.system.rules["unnoticed_small"] = rule9 
+        self.system.rules["unnoticed_large"] = rule10 
+        self.system.rules["recognized_small"] = rule11 
+        self.system.rules["recognized_large"] = rule12 
 
     def calculate(self, salary, employees, reputation):
         input_vals = {
