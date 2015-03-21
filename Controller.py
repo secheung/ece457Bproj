@@ -11,6 +11,8 @@ from fuzzy.Rule import Rule
 from fuzzy.norm.FuzzyAnd import FuzzyAnd
 from fuzzy.operator.Input import Input
 from fuzzy.operator.Compound import Compound
+from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
+from fuzzy.norm.AlgebraicSum import AlgebraicSum
 
 import inputs
 import happiness
@@ -24,7 +26,7 @@ class Controller(object):
         # Input: Pay
         input_pay = InputVariable(fuzzify=Plain(),
                                   description="Pay",
-                                  min=0, max=101)
+                                  min=0.0, max=200.0)
         self.system.variables["input_pay"] = input_pay
 
         user_pay = user["salary"]
@@ -50,7 +52,7 @@ class Controller(object):
         )
         input_employees = InputVariable(fuzzify=Plain(),
                                         description="Number of Employees",
-                                        min=1, max=100)
+                                        min=1.0, max=1000.0)
         self.system.variables["input_employees"] = input_employees
         input_employees.adjectives["Small"] = Adjective(employee["small"])
         input_employees.adjectives["Medium"] = Adjective(employee["med"])
@@ -61,12 +63,12 @@ class Controller(object):
         rep = inputs.generate_rep(user_rep["low"], user_rep["high"])
         input_rep = InputVariable(fuzzify=Plain(),
                                   description="Reputation",
-                                  min=0, max=10)
+                                  min=0.0, max=10.0)
         self.system.variables["input_rep"] = input_rep
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
-        Happiness = OutputVariable(defuzzify=MaxLeft(),
+        Happiness = OutputVariable(defuzzify=COG(segment_size=0.5,ACC=AlgebraicSum(),failsafe=0.0),
                                    description="Happiness",
                                    min=0.0, max=100.0)
         self.system.variables["happiness"] = Happiness
@@ -74,7 +76,6 @@ class Controller(object):
         Happiness.adjectives["Low"] = Adjective(happiness.Happiness_bad)
         Happiness.adjectives["Medium"] = Adjective(happiness.Happiness_med)
         Happiness.adjectives["High"] = Adjective(happiness.Happiness_high)
-        Happiness.failsafe = 0.0 # let it output 0.0 if no COG available
 
         s = self.system
 

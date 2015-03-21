@@ -55,8 +55,8 @@ def generateDocs(FuzzyController):
     # doc.create2DPlot(system,"input_rep","happiness")
     # doc.create2DPlot(system,"input_employees","happiness")
     doc.create3DPlot(system,"input_rep","input_employees","happiness")
-    # doc.create3DPlot(system,"input_rep","input_pay","happiness")
-    # doc.create3DPlot(system,"input_employees","input_pay","happiness")
+    doc.create3DPlot(system,"input_rep","input_pay","happiness")
+    doc.create3DPlot(system,"input_employees","input_pay","happiness")
 
 def generateDot(FuzzyController):
     system = FuzzyController.getFuzzySystem()
