@@ -1,31 +1,31 @@
 
-from fuzzy.InputVariable import InputVariable
-from fuzzy.Adjective import Adjective
 from fuzzy.set.Polygon import Polygon
-from fuzzy.fuzzify.Plain import Plain
 from fuzzy.set.Trapez import Trapez
+from fuzzy.set.ZFunction import ZFunction
+from fuzzy.set.SFunction import SFunction
 
+from passfilter import bandpass
+from passfilter import max_extend
+from passfilter import reduce_certainty
+from TrapezPiFunction import TrapezPiFunction
 
-# PAy
+# Deprecated bad_low, good_high
 def generate_pay(bad_low, bad_high, ok_low, ok_high, good_low, good_high ):
     pay_bad = Polygon()
-    pay_bad.add(x = max(bad_low - 5, 0), y= 0.0)
-    pay_bad.add(x = bad_low, y= 1.0)
+    pay_bad.add(x = 0, y = 0)
+    pay_bad.add(x = 0, y = 1)
     pay_bad.add(x = bad_high, y= 1.0)
-    pay_bad.add(x = bad_high + 5, y= 0.0)
-
-    pay_ok = Polygon()
-    pay_ok.add(x =  ok_low - 5 , y= 0.0)
-    pay_ok.add(x =  ok_low, y= 1.0)
-    pay_ok.add(x =  ok_high, y= 1.0)
-    pay_ok.add(x =  ok_high + 20, y= 0.0)
+    pay_bad.add(x = ok_low, y = 0.0)
+   
+    # just trying this
+    pay_ok = Trapez(ok_low, ok_high, abs(ok_low - bad_high), abs(good_low - ok_high))
 
     pay_good = Polygon()
-    pay_good.add(x =  good_low - 10, y= 0.0)
+    pay_good.add(x =  ok_high, y= 0.0)
     pay_good.add(x =  good_low, y= 1.0)
     pay_good.add(x =  good_high, y= 1.0)
-    # everything over good_high is still good
-    # pay_good.add(x =  good_high + 50 , y= 1.0)
+    pay_good.add(x =  good_high + 50, y= 1.0) # dummy
+    # everything over good_high is still good... may need to add an extension
 
     return {
         "bad": pay_bad,
@@ -34,42 +34,35 @@ def generate_pay(bad_low, bad_high, ok_low, ok_high, good_low, good_high ):
     }
 
 def generate_rep(low, high):
-    low_rep = Polygon()
-    low_rep.add(x = 0, y = 0.0)
-    low_rep.add(x = 0, y = 1.0)
-    low_rep.add(x = low, y = 1.0)
-    low_rep.add(x = low + 1, y = 0.0)
+    low_delta = (high - low)/2.0
+    low_rep = ZFunction(low + low_delta, low_delta)
+    low_rep = max_extend(low_rep, 0, low)
 
-    high_rep = Polygon()
-    high_rep.add(x = high - 3, y= 0.0)
-    high_rep.add(x = high, y = 1.0)
-    high_rep.add(x = 10, y = 1.0)
+    high_delta = low_delta
+    high_rep = SFunction(high - high_delta, high_delta)
+    high_rep = max_extend(high_rep, high, 10)
 
     return {
         "low": low_rep,
         "high": high_rep
     }
 
+# Deprecated small_low, large_high
 def generate_employee(small_low, small_high, med_low, med_high, large_low, large_high):
     employee_small = Polygon()
     employee_small.add(x=0, y=0)
-    small_slop = max(small_low - 5, 0)
+    employee_small.add(x=0, y=1)
+    employee_small.add(x=small_high, y=1)
+    employee_small.add(x=med_low, y=0)
 
-    employee_small.add(x=small_low - small_slop , y = 1)
-    employee_small.add(x=small_low, y = 1)
-    employee_small.add(x=small_high, y = 1)
-    employee_small.add(x=small_high + 2, y = 0)
-
-    employee_med = Polygon()
-    employee_med.add(x=med_low - 10, y = 0)
-    employee_med.add(x=med_low, y = 1)
-    employee_med.add(x=med_high, y = 1)
-    employee_med.add(x=large_low + 10, y = 0)
+    employee_med = TrapezPiFunction(med_low, med_high, 
+                                    abs(med_low - small_high),
+                                    abs(large_low - med_high))
 
     employee_large = Polygon()
-    employee_large.add(x=large_low - 25, y = 0 )
+    employee_large.add(x=med_high, y = 0 )
     employee_large.add(x=large_low, y = 1 )
-    employee_large.add(x=large_high, y = 1 )
+    employee_large.add(x=large_low + 100, y=1) #dummy
 
     return {
         "small": employee_small,
