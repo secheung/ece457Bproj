@@ -34,8 +34,8 @@ class Controller(object):
                                   user_pay["ok_high"],
                                   user_pay["good_low"],
                                   user_pay["good_high"])
-        input_pay.adjectives["Bad"] = Adjective(pay["bad"])
-        input_pay.adjectives["Ok"] = Adjective(pay["ok"])
+        input_pay.adjectives["Low"] = Adjective(pay["bad"])
+        input_pay.adjectives["Medium"] = Adjective(pay["ok"])
         input_pay.adjectives["Good"] = Adjective(pay["good"])
 
         # Input: Number of Employees
@@ -71,8 +71,8 @@ class Controller(object):
                                    min=0.0, max=100.0)
         self.system.variables["happiness"] = Happiness
 
-        Happiness.adjectives["Bad"] = Adjective(happiness.Happiness_bad)
-        Happiness.adjectives["Med"] = Adjective(happiness.Happiness_med)
+        Happiness.adjectives["Low"] = Adjective(happiness.Happiness_bad)
+        Happiness.adjectives["Medium"] = Adjective(happiness.Happiness_med)
         Happiness.adjectives["Good"] = Adjective(happiness.Happiness_good)
         Happiness.failsafe = 0.0 # let it output 0.0 if no COG available
 
@@ -86,30 +86,30 @@ class Controller(object):
             )
 
         rule2 = Rule(
-            adjective=s.variables["happiness"].adjectives["Bad"],
+            adjective=s.variables["happiness"].adjectives["Low"],
             operator=Compound(FuzzyAnd(),
-                              Input(s.variables['input_pay'].adjectives["Bad"]),
+                              Input(s.variables['input_pay'].adjectives["Low"]),
                               Input(s.variables['input_rep'].adjectives["Unnoticed"])),
             )
 
         rule3 = Rule(
             adjective=s.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-                              Input(s.variables['input_pay'].adjectives["Ok"]),
+                              Input(s.variables['input_pay'].adjectives["Medium"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             )
 
         rule4 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            adjective=self.system.variables["happiness"].adjectives["Low"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Large"])),
             CER=fuzzy.norm.Min.Min())
 
         rule5 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Med"],
+            adjective=self.system.variables["happiness"].adjectives["Medium"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_pay.adjectives["Bad"]),
+                              Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
@@ -135,14 +135,14 @@ class Controller(object):
             CER=fuzzy.norm.Min.Min())
 
         rule9 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            adjective=self.system.variables["happiness"].adjectives["Low"],
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
         rule10 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Bad"],
+            adjective=self.system.variables["happiness"].adjectives["Low"],
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Large"])),
