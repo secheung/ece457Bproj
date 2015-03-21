@@ -36,7 +36,7 @@ class Controller(object):
                                   user_pay["good_high"])
         input_pay.adjectives["Low"] = Adjective(pay["bad"])
         input_pay.adjectives["Medium"] = Adjective(pay["ok"])
-        input_pay.adjectives["Good"] = Adjective(pay["good"])
+        input_pay.adjectives["High"] = Adjective(pay["high"])
 
         # Input: Number of Employees
         user_size = user["employees"]
@@ -73,15 +73,15 @@ class Controller(object):
 
         Happiness.adjectives["Low"] = Adjective(happiness.Happiness_bad)
         Happiness.adjectives["Medium"] = Adjective(happiness.Happiness_med)
-        Happiness.adjectives["Good"] = Adjective(happiness.Happiness_good)
+        Happiness.adjectives["High"] = Adjective(happiness.Happiness_high)
         Happiness.failsafe = 0.0 # let it output 0.0 if no COG available
 
         s = self.system
 
         rule1 = Rule(
-            adjective=s.variables["happiness"].adjectives["Good"],
+            adjective=s.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
-                              Input(s.variables['input_pay'].adjectives["Good"]),
+                              Input(s.variables['input_pay'].adjectives["High"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             )
 
@@ -93,7 +93,7 @@ class Controller(object):
             )
 
         rule3 = Rule(
-            adjective=s.variables["happiness"].adjectives["Good"],
+            adjective=s.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
                               Input(s.variables['input_pay'].adjectives["Medium"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
@@ -114,23 +114,23 @@ class Controller(object):
             CER=fuzzy.norm.Min.Min())
 
         rule6 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Good"],
+            adjective=self.system.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_pay.adjectives["Good"]),
+                              Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
         rule7 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Good"],
+            adjective=self.system.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_pay.adjectives["Good"]),
+                              Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Medium"])),
             CER=fuzzy.norm.Min.Min())
 
         rule8 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Good"],
+            adjective=self.system.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_pay.adjectives["Good"]),
+                              Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Large"])),
             CER=fuzzy.norm.Min.Min())
 
@@ -149,14 +149,14 @@ class Controller(object):
             CER=fuzzy.norm.Min.Min())
 
         rule11 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Good"],
+            adjective=self.system.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Small"])),
             CER=fuzzy.norm.Min.Min())
 
         rule12 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Good"],
+            adjective=self.system.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Large"])),

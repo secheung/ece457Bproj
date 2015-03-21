@@ -22,5 +22,5 @@ Happiness_med = TrapezPiFunction(med_low, med_high,
                                  med_low - low_high, high_low - med_high)
 
 high_low_delta = (high_low - med_high) / 2.0
-Happiness_good = SFunction(high_low - high_low_delta, high_low_delta)
-Happiness_good = max_extend(Happiness_good, high_low, 100)
+Happiness_high = SFunction(high_low - high_low_delta, high_low_delta)
+Happiness_high = max_extend(Happiness_high, high_low, 100)

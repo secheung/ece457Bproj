@@ -20,17 +20,17 @@ def generate_pay(bad_low, bad_high, ok_low, ok_high, good_low, good_high ):
     # just trying this
     pay_ok = Trapez(ok_low, ok_high, abs(ok_low - bad_high), abs(good_low - ok_high))
 
-    pay_good = Polygon()
-    pay_good.add(x =  ok_high, y= 0.0)
-    pay_good.add(x =  good_low, y= 1.0)
-    pay_good.add(x =  good_high, y= 1.0)
-    pay_good.add(x =  good_high + 50, y= 1.0) # dummy
+    pay_high = Polygon()
+    pay_high.add(x =  ok_high, y= 0.0)
+    pay_high.add(x =  good_low, y= 1.0)
+    pay_high.add(x =  good_high, y= 1.0)
+    pay_high.add(x =  good_high + 50, y= 1.0) # dummy
     # everything over good_high is still good... may need to add an extension
 
     return {
         "bad": pay_bad,
         "ok": pay_ok,
-        "good": pay_good
+        "high": pay_high
     }
 
 def generate_rep(low, high):
