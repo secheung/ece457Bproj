@@ -97,9 +97,9 @@ class GraphSystem(System):
 
                 # get inferenced output
                 l = input_name + "." + adj_name
-                x_min,y_min = doc.getMinMax(rule.adjective.set)
+                out_x_min, out_x_max = 0.0, 100.0 #hard code for now
                 fix_range = norm(Min(), rule.adjective.set, adj.getMembership())
-                fix_range = merge(Max(), fix_range, Polygon([(x_min,0.0),(x_max,0.0)]))
+                fix_range = merge(Max(), fix_range, Polygon([(out_x_min,0.0),(out_x_max,0.0)]))
                 inf_output_set[l] = fix_range
                 
             self.inf_output_sets[rule_name] = inf_output_set
