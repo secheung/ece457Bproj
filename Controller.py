@@ -16,12 +16,12 @@ from fuzzy.norm.AlgebraicSum import AlgebraicSum
 
 import inputs
 import happiness
-
+from GraphSystem import GraphSystem
 
 class Controller(object):
     def __init__(self, user):
         # create system object
-        self.system = fuzzy.System.System()
+        self.system = GraphSystem()
 
         # Input: Pay
         input_pay = InputVariable(fuzzify=Plain(),
@@ -68,7 +68,7 @@ class Controller(object):
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
-        Happiness = OutputVariable(defuzzify=COG(segment_size=0.5,ACC=AlgebraicSum(),failsafe=0.0),
+        Happiness = OutputVariable(defuzzify=COG(segment_size=0.5,failsafe=0.0),
                                    description="Happiness",
                                    min=0.0, max=100.0)
         self.system.variables["happiness"] = Happiness
@@ -84,27 +84,31 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(s.variables['input_pay'].adjectives["High"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
-            )
+            certainty=1.0,
+            CER=fuzzy.norm.Min.Min())
 
         rule2 = Rule(
             adjective=s.variables["happiness"].adjectives["Low"],
             operator=Compound(FuzzyAnd(),
                               Input(s.variables['input_pay'].adjectives["Low"]),
                               Input(s.variables['input_rep'].adjectives["Unnoticed"])),
-            )
+            certainty=1.0,
+            CER=fuzzy.norm.Min.Min())
 
         rule3 = Rule(
             adjective=s.variables["happiness"].adjectives["High"],
             operator=Compound(FuzzyAnd(),
                               Input(s.variables['input_pay'].adjectives["Medium"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
-            )
+            certainty=1.0,
+            CER=fuzzy.norm.Min.Min())
 
         rule4 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
             operator=Compound(FuzzyAnd(),
                               Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Large"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule5 = Rule(
@@ -112,6 +116,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Small"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule6 = Rule(
@@ -119,6 +124,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Small"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule7 = Rule(
@@ -126,6 +132,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Medium"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule8 = Rule(
@@ -133,6 +140,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Large"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule9 = Rule(
@@ -140,6 +148,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Small"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule10 = Rule(
@@ -147,6 +156,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Large"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule11 = Rule(
@@ -154,6 +164,7 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Small"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
         rule12 = Rule(
@@ -161,29 +172,33 @@ class Controller(object):
             operator=Compound(FuzzyAnd(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Large"])),
+            certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
-        self.system.rules["highpay_recognized"] = rule1 
-        self.system.rules["lowpay_unnoticed"] = rule2 
-        self.system.rules["medpay_recognized"] = rule3 
-        self.system.rules["lowpay_large"] = rule4 
-        self.system.rules["lowpay_small"] = rule5 
-        self.system.rules["highpay_small"] = rule6 
-        self.system.rules["highpay_med"] = rule7 
-        self.system.rules["highpay_large"] = rule8 
-        self.system.rules["unnoticed_small"] = rule9 
-        self.system.rules["unnoticed_large"] = rule10 
-        self.system.rules["recognized_small"] = rule11 
-        self.system.rules["recognized_large"] = rule12 
+        self.system.rules["highpay_recognized"] = rule1
+        self.system.rules["lowpay_unnoticed"] = rule2
+        self.system.rules["medpay_recognized"] = rule3
+        self.system.rules["lowpay_large"] = rule4
+        self.system.rules["lowpay_small"] = rule5
+        self.system.rules["highpay_small"] = rule6
+        self.system.rules["highpay_med"] = rule7
+        self.system.rules["highpay_large"] = rule8
+        self.system.rules["unnoticed_small"] = rule9
+        self.system.rules["unnoticed_large"] = rule10
+        self.system.rules["recognized_small"] = rule11
+        self.system.rules["recognized_large"] = rule12
 
-    def calculate(self, salary, employees, reputation):
+    def calculate(self, name, salary, employees, reputation):
         input_vals = {
             "input_pay": salary,
             "input_employees": employees,
             "input_rep": reputation
         }
         output_vals = {"happiness": 0.0}
-        self.system.calculate(input=input_vals, output=output_vals)
+        if (type(self.system) is GraphSystem):
+            self.system.calculate(input=input_vals, output=output_vals, input_name=name)
+        else:
+            self.system.calculate(input=input_vals, output=output_vals)
 
         r = output_vals["happiness"]
         return r
