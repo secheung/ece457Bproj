@@ -19,8 +19,8 @@ companies = [
      "employees": 150,
      "reputation": 2.3},
     {"name": "John Engineering",
-     "employees": 4,
      "salary": 35,
+     "employees": 4,
      "reputation": 9}]
 
 users = [{
@@ -99,7 +99,10 @@ def main(argv):
     if exit: sys.exit(0)
 
     for company in companies:
-        res = controller.calculate(company["name"], company["employees"], company["salary"], company["reputation"])
+        res = controller.calculate(name=company["name"],
+                                   salary=company["salary"],
+                                   employees=company["employees"],
+                                   reputation=company["reputation"])
         print company["name"] + ": " + str(res)
 
 if __name__ == "__main__":

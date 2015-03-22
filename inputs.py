@@ -7,7 +7,6 @@ from fuzzy.set.SFunction import SFunction
 from passfilter import bandpass
 from passfilter import max_extend
 from passfilter import reduce_certainty
-from TrapezPiFunction import TrapezPiFunction
 
 # Deprecated bad_low, good_high
 def generate_pay(bad_low, bad_high, ok_low, ok_high, good_low, good_high ):
@@ -54,9 +53,9 @@ def generate_employee(small_low, small_high, med_low, med_high, large_low, large
     employee_small.add(x=small_high, y=1.0)
     employee_small.add(x=med_low, y=0.0)
 
-    employee_med = TrapezPiFunction(med_low, med_high, 
-                                    abs(med_low - small_high),
-                                    abs(large_low - med_high))
+    employee_med = Trapez(med_low, med_high,
+                                  abs(med_low - small_high),
+                                  abs(large_low - med_high))
 
     employee_large = Polygon()
     employee_large.add(x=med_high, y = 0.0 )
