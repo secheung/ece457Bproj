@@ -100,14 +100,18 @@ def generate_employee(small_low, small_high, med_low, med_high, large_low, large
     employee_small.add(x=small_high, y = 1)
     employee_small.add(x=small_high + small_slope, y = 0)
 
-    smallish_slope = 10 if smallish > 10 else 0
-    smallish_spread = 0 if smallish_slope > 0 else 0
+    #smallish_slope = 10 if smallish > 10 else 0
+    #smallish_spread = 0 if smallish_slope > 0 else 0
+
+    smallish_slope = 10
+    smallish_low = small_high - smallish_slope if small_high > 2 else small_high
+    smallish_high = med_low + smallish_slope*2 if med_low > small_high else med_low
 
     employee_smallish = Polygon()
-    employee_smallish.add(x=smallish - smallish_slope, y=0)
-    employee_smallish.add(x=smallish - smallish_spread, y = 1)
-    employee_smallish.add(x=smallish + smallish_spread, y = 1)
-    employee_smallish.add(x=smallish + 2*smallish_slope, y = 0)
+    employee_smallish.add(x=smallish_low, y=0)
+    employee_smallish.add(x=smallish, y = 1)
+    employee_smallish.add(x=smallish, y = 1)
+    employee_smallish.add(x=smallish_high, y = 0)
 
     med_slope = 10 if med_low > 10 else 0
     med_spread = 0

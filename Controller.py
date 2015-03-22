@@ -317,8 +317,14 @@ class Controller(object):
 	rule27d1 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Good"],
             operator=Compound(FuzzyAnd(),
-                              Input(input_pay.adjectives["Good"]),
-                              Input(input_rep.adjectives["Upcoming"])),
+                              Compound( FuzzyOr(),
+					Input(input_pay.adjectives["Good"]),
+					Input(input_pay.adjectives["Fine"])
+                                      ),
+                              Compound( FuzzyOr(),
+					Input(input_rep.adjectives["Upcoming"]),
+					Input(input_rep.adjectives["Recognized"])
+                                      )),
             CER=fuzzy.norm.Min.Min())
 	
 	rule27d2 = Rule(
@@ -341,6 +347,30 @@ class Controller(object):
                               Input(input_rep.adjectives["Upcoming"])),
             CER=fuzzy.norm.Min.Min())
 	
+	rule27d4 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Med"],
+            operator=Compound(FuzzyAnd(),
+			      Input(input_pay.adjectives["Fine"]),
+                              Input(input_rep.adjectives["Unnoticed"])),
+            CER=fuzzy.norm.Min.Min())
+
+	rule27d5 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Med"],
+            operator=Compound(FuzzyAnd(),
+			      Input(input_pay.adjectives["Good"]),
+                              Input(input_rep.adjectives["Unnoticed"])),
+            CER=fuzzy.norm.Min.Min())
+
+	rule27d6 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Badish"],
+            operator=Compound(FuzzyAnd(),
+                              Compound( FuzzyOr(),
+					Input(input_pay.adjectives["Ok"]),
+					Input(input_pay.adjectives["Alright"])
+                                      ),
+                              Input(input_rep.adjectives["Unnoticed"])),
+            CER=fuzzy.norm.Min.Min())
+
         #rep vs employees
         #upcoming/recognized and small
         rule28d1 = Rule(
@@ -358,7 +388,7 @@ class Controller(object):
 
 	#upcoming/recognized and med
         rule28d2 = Rule(
-            adjective=self.system.variables["happiness"].adjectives["Med"],
+            adjective=self.system.variables["happiness"].adjectives["Goodish"],
             operator=Compound(FuzzyAnd(),
                               Compound( FuzzyOr(),
 					Input(input_employees.adjectives["Medium"]),
@@ -438,7 +468,9 @@ class Controller(object):
 	self.system.rules["rule27d1"] = rule27d1
 	self.system.rules["rule27d2"] = rule27d2
 	self.system.rules["rule27d3"] = rule27d3
-	#self.system.rules["rule27d4"] = rule27d4
+	self.system.rules["rule27d4"] = rule27d4
+	self.system.rules["rule27d5"] = rule27d5
+	self.system.rules["rule27d6"] = rule27d6
 	self.system.rules["rule28d1"] = rule28d1
 	self.system.rules["rule28d2"] = rule28d2
 	self.system.rules["rule28d3"] = rule28d3
