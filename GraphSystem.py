@@ -28,7 +28,7 @@ class GraphSystem(System):
     def calculate(self, input, output, input_name):
         # hope that the input_name has valid filename characters...
         self.input_name = input_name.replace(' ', '_')
-        self.saveLocation = self.directory + "/" + self.input_name
+        self.saveLocation = self.directory + "/" + self.input_name + "/plots"
         if not os.path.exists(self.saveLocation):
             os.makedirs(self.saveLocation)
         self.plotDoc = doc.Doc(self.saveLocation)

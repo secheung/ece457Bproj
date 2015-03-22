@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+  td { white-space: nowrap; }
+  td.right { float: right; padding-right: 100px }
+  td.left { float: left; }
+</style>
+</head>
+
+<body>
+<table>
+  <tr><td class="right"><h1>Inputs</h1></td><td><h1>Outputs</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/input_pay.png">
+      <img src="plots/input_employees.png">
+      <img src="plots/input_rep.png">
+    </td>
+    <td>
+      <img src="plots/happiness.png">
+    </td>
+  </tr>
+  
+  <tr><td class="right"><h1>Fuzzified Inputs</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/fuzzified_input_pay.png">
+      <img src="plots/fuzzified_input_employees.png">
+      <img src="plots/fuzzified_input_rep.png">
+    </td>
+  </tr>
+
+  <tr><td class="right"><h1>Input Rule highpay_large</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_highpay_large_input_employees.png">
+      <img src="plots/rule_highpay_large_input_pay.png">
+    </td>
+    <td>
+      <img src="plots/rule_highpay_large_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule highpay_med</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_highpay_med_input_employees.png">
+      <img src="plots/rule_highpay_med_input_pay.png">
+    </td>
+    <td>
+      <img src="plots/rule_highpay_med_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule highpay_recognized</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_highpay_recognized_input_pay.png">
+      <img src="plots/rule_highpay_recognized_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_highpay_recognized_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule highpay_small</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_highpay_small_input_employees.png">
+      <img src="plots/rule_highpay_small_input_pay.png">
+    </td>
+    <td>
+      <img src="plots/rule_highpay_small_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule lowpay_large</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_lowpay_large_input_employees.png">
+      <img src="plots/rule_lowpay_large_input_pay.png">
+    </td>
+    <td>
+      <img src="plots/rule_lowpay_large_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule lowpay_small</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_lowpay_small_input_employees.png">
+      <img src="plots/rule_lowpay_small_input_pay.png">
+    </td>
+    <td>
+      <img src="plots/rule_lowpay_small_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule lowpay_unnoticed</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_lowpay_unnoticed_input_pay.png">
+      <img src="plots/rule_lowpay_unnoticed_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_lowpay_unnoticed_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule medpay_recognized</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_medpay_recognized_input_pay.png">
+      <img src="plots/rule_medpay_recognized_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_medpay_recognized_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule recognized_large</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_recognized_large_input_employees.png">
+      <img src="plots/rule_recognized_large_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_recognized_large_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule recognized_small</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_recognized_small_input_employees.png">
+      <img src="plots/rule_recognized_small_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_recognized_small_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule unnoticed_large</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_unnoticed_large_input_employees.png">
+      <img src="plots/rule_unnoticed_large_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_unnoticed_large_output_happiness.png">
+    </td>
+  </tr>
+  <tr><td class="right"><h1>Input Rule unnoticed_small</h1></td><td><h1>Output Rule happiness</h1></td></tr>
+  <tr>
+    <td class="right">
+      <img src="plots/rule_unnoticed_small_input_employees.png">
+      <img src="plots/rule_unnoticed_small_input_rep.png">
+    </td>
+    <td>
+      <img src="plots/rule_unnoticed_small_output_happiness.png">
+    </td>
+  </tr>
+
+  <tr><td class="right"></td><td><h1>Activated Sets happiness</h1></td></tr>
+  <tr>
+    <td class="right"></td>
+    <td>
+      <img src="plots/activated_sets.png">
+    </td>
+  </tr>
+
+  <tr><td class="right"></td><td><h1>Final Inference happiness</h1></td></tr>
+  <tr>
+    <td class="right"></td>
+    <td>
+      <img src="plots/final_inference.png">
+    </td>
+  </tr>
+</table>
+</body>
+</html>
+
