@@ -3,48 +3,15 @@ import fuzzy.System
 import math
 import sys, getopt
 from Controller import Controller
+import employee_data
+import company_data
+import random
+
 try:
     import Gnuplot
     have_Gnuplot = 1
 except:
     have_Gnuplot = 0
-
-companies = [
-    {"name": "Acme Inc",
-     "salary": 55,
-     "employees": 150,
-     "reputation": 7.5},
-    {"name": "Smith Consulting",
-     "salary": 90,
-     "employees": 150,
-     "reputation": 2.3},
-    {"name": "John Engineering",
-     "employees": 4,
-     "salary": 35,
-     "reputation": 9}]
-
-users = [{
-    "salary": {
-        "bad_low": 25,
-        "bad_high": 35,
-        "ok_low": 40,
-        "ok_high": 50,
-        "good_low": 75,
-        "good_high": 100
-    },
-    "employees": {
-        "small_low": 1,
-        "small_high": 20,
-        "med_low": 50,
-        "med_high": 100,
-        "large_low": 200,
-        "large_high": 500
-    },
-    "rep": {
-        "low": 3,
-        "high": 8
-    }
-}]
 
 def generateDocs(FuzzyController):
     system = FuzzyController.getFuzzySystem()
@@ -65,6 +32,8 @@ def main(argv):
         print 'main.py -p'
         sys.exit(2)
 
+    users = employee_data.getEmployeeData()
+    companies = company_data.getCompanyData()
     controller = Controller(users[0]);
 
     for opt, arg in opts:
@@ -78,6 +47,40 @@ def main(argv):
     for company in companies:
         res = controller.calculate(company["employees"], company["salary"], company["reputation"])
         print company["name"] + ": " + str(res)
+
+    testSystem()
+
+def testSystem():
+    print "\n"
+    users = employee_data.getEmployeeData()
+    companies = company_data.getCompanyData()
+    correct = 0
+
+    for user in users:
+        controller = Controller(user)
+        results = 0
+        results_company = []
+        get = ""
+        for company in companies:
+            res = controller.calculate(company["employees"], company["salary"], company["reputation"])
+            if res == results:
+            	results_company.append(company["name"])
+            elif res > results:
+                results = res
+                del results_company[:]
+                results_company.append(company["name"])
+            #print company["name"] + ": " + str(res)
+        if len(results_company) > 1:
+            get = random.choice(results_company)
+        else:
+            get = results_company[0]
+
+        #print (get,user["expected"])
+        if get == user["expected"]:
+            correct = correct + 1
+	#print "\n"
+
+    print (100.0*correct/len(users)),"% correct"
 
 if __name__ == "__main__":
     main(sys.argv[1:])
