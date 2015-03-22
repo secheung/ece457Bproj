@@ -6,6 +6,7 @@ from fuzzy.norm.Min import Min
 from fuzzy.norm.Max import Max
 
 import os
+import shutil
 
 class GraphSystem(System):
     def __init__(self,description="",variables=None,rules=None,directory="graphsystem"):
@@ -13,7 +14,8 @@ class GraphSystem(System):
         self.directory = directory
         self.fuzzified_sets = {}
         self.inf_input_sets = {}
-        self.inf_output_sets = {}
+        self.inf_output_all_sets = {}
+        self.inf_output_merged_sets = {}
         self.activated_sets = {}
         self.final_sets = {}
 
@@ -21,20 +23,24 @@ class GraphSystem(System):
         super(GraphSystem, self).reset()
         self.fuzzified_sets = {}
         self.inf_input_sets = {}
-        self.inf_output_sets = {}
+        self.inf_output_all_sets = {}
+        self.inf_output_merged_sets = {}
         self.activated_sets = {}
         self.final_sets = {}
 
     def calculate(self, input, output, input_name):
         # hope that the input_name has valid filename characters...
         self.input_name = input_name.replace(' ', '_')
-        self.saveLocation = self.directory + "/" + self.input_name + "/plots"
+        self.output_location = self.directory + "/" + self.input_name
+        self.saveLocation = self.output_location + "/plots"
         if not os.path.exists(self.saveLocation):
             os.makedirs(self.saveLocation)
         self.plotDoc = doc.Doc(self.saveLocation)
         self.plotDoc.createDoc(self)
         
         super(GraphSystem, self).calculate(input, output)
+
+        shutil.copy("graphsystem_viewer.html", self.output_location)
 
     def fuzzify(self, input):
         super(GraphSystem, self).fuzzify(input)
@@ -66,7 +72,9 @@ class GraphSystem(System):
         super(GraphSystem, self).inference()
         
         for rule_name, rule in self.rules.items():
-            inf_output_set = {}
+            output_adj_name, output_input_name = rule.adjective.getName(self)
+            inf_output_all_set = {}
+            inf_output_merged_set = {}
             # get plot for each input (e.x. input_pay.low, input_rep.unnoticed) in a rule
             for rule_input in rule.operator.inputs:
                 adj = rule_input.adjective 
@@ -97,19 +105,32 @@ class GraphSystem(System):
 
                 # get inferenced output
                 l = input_name + "." + adj_name
-                out_x_min, out_x_max = 0.0, 100.0 #hard code for now
-                fix_range = norm(Min(), rule.adjective.set, adj.getMembership())
-                fix_range = merge(Max(), fix_range, Polygon([(out_x_min,0.0),(out_x_max,0.0)]))
-                inf_output_set[l] = fix_range
-                
-            self.inf_output_sets[rule_name] = inf_output_set
+                out_x_min, out_x_max = doc.getGlobalMinMax(doc.getSets(self.variables[output_input_name]))
+                inf_output_all = norm(Min(), rule.adjective.set, adj.getMembership())
+                inf_output_all = merge(Max(), inf_output_all, Polygon([(out_x_min,0.0),(out_x_max,0.0)]))
+                inf_output_all_set[l] = inf_output_all
+
+                if output_input_name not in inf_output_merged_set:
+                    inf_output_merged_set[output_input_name] = inf_output_all
+                else:
+                    inf_output_merged_set[output_input_name] = merge(Min(), 
+                                                                   inf_output_merged_set[output_input_name], 
+                                                                   inf_output_all)
             
+            self.inf_output_all_sets[rule_name] = inf_output_all_set
+            self.inf_output_merged_sets[rule_name] = inf_output_merged_set
+
             # try to plot
-            output_adj_name = rule.adjective.getName(self)[1]
-            title = "rule_" + rule_name + "_output_" + output_adj_name
-            xlabel = output_adj_name
-            unit = self.variables[output_adj_name].unit
-            self.plotDoc.createDocSets(inf_output_set,title,description=xlabel,units=unit)
+            title = "rule_" + rule_name + "_output_all_" + output_input_name + "_" + output_adj_name
+            xlabel = output_input_name
+            unit = self.variables[output_input_name].unit
+            self.plotDoc.createDocSets(inf_output_all_set,title,description=xlabel,units=unit)
+            
+            # try to plot merged
+            title = "rule_" + rule_name + "_output_merged_" + output_input_name + "_" + output_adj_name
+            xlabel = output_input_name
+            unit = self.variables[output_input_name].unit
+            self.plotDoc.createDocSets(inf_output_merged_set,title,description=xlabel,units=unit)
 
     def defuzzify(self, output):
         super(GraphSystem, self).defuzzify(output)
