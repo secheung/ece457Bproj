@@ -5,6 +5,7 @@ import sys, getopt
 from Controller import Controller
 import employee_data
 import company_data
+import random
 
 try:
     import Gnuplot
@@ -44,19 +45,43 @@ def main(argv):
             generateDocs(controller)
             sys.exit(0)
 
-    for company in companies:
-        res = controller.calculate(company["employees"], company["salary"], company["reputation"])
-        print company["name"] + ": " + str(res)
+    #for company in companies:
+    #    res = controller.calculate(company["employees"], company["salary"], company["reputation"])
+    #    print company["name"] + ": " + str(res)
+
+    testSystem()
 
 
-def testSystem(users, companies):
+def testSystem():
+    users = employee_data.getEmployeeData()
+    companies = company_data.getCompanyData()
+    correct = 0
+
     for user in users:
         controller = Controller(user)
-        print user["expected"]
+        results = 0
+        results_company = []
+        get = ""
         for company in companies:
             res = controller.calculate(company["employees"], company["salary"], company["reputation"])
-            print company["name"] + ": " + str(res)
-        print "\n"
+            if res == results:
+            	results_company.append(company["name"])
+            elif res > results:
+                results = res
+                del results_company[:]
+                results_company.append(company["name"])
+            #print company["name"] + ": " + str(res)
+        if len(results_company) > 1:
+            get = random.choice(results_company)
+        else:
+            get = results_company[0]
+
+        #print (get,user["expected"])
+        if get == user["expected"]:
+            correct = correct + 1
+	#print "\n"
+
+    print (100.0*correct/len(users)),"% correct"
 
 
 if __name__ == "__main__":
