@@ -16,9 +16,9 @@ companies = [
      "employees": 100,
      "reputation": 6},
     {"name": "DC Electical",
-     "salary": 100,
+     "salary": 50,
      "employees": 35,
-     "reputation": 10}]
+     "reputation": 5}]
 
 def getCompanyData():
     return companies
