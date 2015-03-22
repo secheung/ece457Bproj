@@ -26,7 +26,7 @@ class Controller(object):
         # Input: Pay
         input_pay = InputVariable(fuzzify=Plain(),
                                   description="Pay",
-                                  min=0.0, max=200.0)
+                                  min=0.0, max=200.0, unit="x10 ($)")
         self.system.variables["input_pay"] = input_pay
 
         user_pay = user["salary"]
@@ -52,7 +52,7 @@ class Controller(object):
         )
         input_employees = InputVariable(fuzzify=Plain(),
                                         description="Number of Employees",
-                                        min=1.0, max=1000.0)
+                                        min=1.0, max=1000.0, unit=None)
         self.system.variables["input_employees"] = input_employees
         input_employees.adjectives["Small"] = Adjective(employee["small"])
         input_employees.adjectives["Medium"] = Adjective(employee["med"])
@@ -63,14 +63,14 @@ class Controller(object):
         rep = inputs.generate_rep(user_rep["low"], user_rep["high"])
         input_rep = InputVariable(fuzzify=Plain(),
                                   description="Reputation",
-                                  min=0.0, max=10.0)
+                                  min=0.0, max=10.0, unit="/10")
         self.system.variables["input_rep"] = input_rep
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
         Happiness = OutputVariable(defuzzify=COG(segment_size=0.5,failsafe=0.0),
                                    description="Happiness",
-                                   min=0.0, max=100.0)
+                                   min=0.0, max=100.0, unit="/100")
         self.system.variables["happiness"] = Happiness
 
         Happiness.adjectives["Low"] = Adjective(happiness.Happiness_bad)
