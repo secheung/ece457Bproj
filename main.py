@@ -98,7 +98,6 @@ def main(argv):
             exit = True
     if exit: sys.exit(0)
 
-    # require graphsystem folder!!!
     for company in companies:
         res = controller.calculate(company["name"], company["employees"], company["salary"], company["reputation"])
         print company["name"] + ": " + str(res)

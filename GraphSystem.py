@@ -5,11 +5,12 @@ from fuzzy.set.Polygon import Polygon
 from fuzzy.norm.Min import Min
 from fuzzy.norm.Max import Max
 
+import os
+
 class GraphSystem(System):
     def __init__(self,description="",variables=None,rules=None,directory="graphsystem"):
         super(GraphSystem, self).__init__(description=description,variables=variables,rules=rules)
         self.directory = directory
-        self.plotDoc = doc.Doc(directory)
         self.fuzzified_sets = {}
         self.inf_input_sets = {}
         self.inf_output_sets = {}
@@ -27,6 +28,10 @@ class GraphSystem(System):
     def calculate(self, input, output, input_name):
         # hope that the input_name has valid filename characters...
         self.input_name = input_name.replace(' ', '_')
+        self.saveLocation = self.directory + "/" + self.input_name
+        if not os.path.exists(self.saveLocation):
+            os.makedirs(self.saveLocation)
+        self.plotDoc = doc.Doc(self.saveLocation)
         self.plotDoc.createDoc(self)
         
         super(GraphSystem, self).calculate(input, output)
@@ -52,7 +57,7 @@ class GraphSystem(System):
             self.fuzzified_sets[var_name] = fuzzified_set
 
             # try to plot
-            title = self.input_name + "_fuzzified_" + var_name
+            title = "fuzzified_" + var_name
             xlabel = var.description
             unit = var.unit
             self.plotDoc.createDocSets(fuzzified_set,title,description=xlabel,units=unit)
@@ -120,10 +125,10 @@ class GraphSystem(System):
             self.final_sets[var_name] = final_sets
 
             # try to plot
-            title = self.input_name + "_activated_sets"
+            title = "activated_sets"
             xlabel = var.description
             unit = var.unit
             self.plotDoc.createDocSets(activated_sets,title,description=xlabel,units=unit)
             
-            title = self.input_name + "_final_inference"
+            title = "final_inference"
             self.plotDoc.createDocSets(final_sets,title,description=xlabel,units=unit)
