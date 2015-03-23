@@ -21,11 +21,13 @@ from GraphSystem import GraphSystem
 
 class Controller(object):
     def __init__(self, user, useGraphSystem=False):
+        print "Creating system for " + user["name"]
+
         # create system object
         if useGraphSystem:
             self.system = GraphSystem()
         else:
-            self.system = System()
+            self.system = fuzzy.System.System()
 
         # Input: Pay
         input_pay = InputVariable(fuzzify=Plain(),
@@ -43,6 +45,8 @@ class Controller(object):
         input_pay.adjectives["Low"] = Adjective(pay["bad"])
         input_pay.adjectives["Medium"] = Adjective(pay["ok"])
         input_pay.adjectives["High"] = Adjective(pay["high"])
+
+        salary_pref = float(user["salary_pref"]) if "salary_pref" in user else 1.0
 
         # Input: Number of Employees
         user_size = user["employees"]
@@ -62,6 +66,8 @@ class Controller(object):
         input_employees.adjectives["Medium"] = Adjective(employee["med"])
         input_employees.adjectives["Large"] = Adjective(employee["large"])
 
+        employees_pref = float(user["employees_pref"]) if "employees_pref" in user else 1.0
+
         # Input: Reputation
         user_rep = user["rep"]
         rep = inputs.generate_rep(user_rep["low"], user_rep["high"])
@@ -71,7 +77,23 @@ class Controller(object):
         self.system.variables["input_rep"] = input_rep
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
+        
+        rep_pref = float(user["rep_pref"]) if "rep_pref" in user else 1.0
 
+        # Input: Distance/Commute
+        user_distance = user["commute"]
+        commute_pref = inputs.generate_commute(user_distance["close"],
+                                               user_distance["medium"],
+                                               user_distance["far"])
+        input_commute = InputVariable(fuzzify=Plain(),
+                                      description="Distance",
+                                      min=0.0, max=150.0, unit="minutes")
+        self.system.variables["input_commute"] = input_commute
+        input_commute.adjectives["Close"] = Adjective(commute_pref["close"])
+        input_commute.adjectives["Medium"] = Adjective(commute_pref["medium"])
+        input_commute.adjectives["Far"] = Adjective(commute_pref["far"])
+    
+        # Output: Happiness
         Happiness = OutputVariable(defuzzify=COG(failsafe=0.0),
                                    description="Happiness",
                                    min=0.0, max=100.0, unit="/100")
@@ -179,6 +201,25 @@ class Controller(object):
             certainty=1.0,
             CER=fuzzy.norm.Min.Min())
 
+        # distance rules
+        rule13 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["High"],
+            operator=Input(input_commute.adjectives["Close"]),
+            certainty=1.0,
+            CER=fuzzy.norm.Min.Min())
+
+        rule14 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Medium"],
+            operator=Input(input_commute.adjectives["Medium"]),
+            certainty=1.0,
+            CER=fuzzy.norm.Min.Min())
+
+        rule15 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Low"],
+            operator=Input(input_commute.adjectives["Far"]),
+            certainty=1.0,
+            CER=fuzzy.norm.Min.Min())
+
         self.system.rules["highpay_recognized"] = rule1
         self.system.rules["lowpay_unnoticed"] = rule2
         self.system.rules["medpay_recognized"] = rule3
@@ -191,12 +232,16 @@ class Controller(object):
         self.system.rules["unnoticed_large"] = rule10
         self.system.rules["recognized_small"] = rule11
         self.system.rules["recognized_large"] = rule12
+        self.system.rules["closedist"] = rule13
+        self.system.rules["mediumdist"] = rule14
+        self.system.rules["fardist"] = rule15
 
-    def calculate(self, name, salary, employees, reputation):
+    def calculate(self, name, salary, employees, reputation, distance):
         input_vals = {
             "input_pay": salary,
             "input_employees": employees,
-            "input_rep": reputation
+            "input_rep": reputation,
+            "input_commute": distance
         }
         output_vals = {"happiness": 0.0}
         if type(self.system) is GraphSystem:

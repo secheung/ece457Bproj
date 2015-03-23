@@ -5,6 +5,10 @@ from fuzzy.set.Polygon import Polygon
 from fuzzy.norm.Min import Min
 from fuzzy.norm.Max import Max
 from fuzzy import Rule
+from fuzzy.operator.Compound import Compound
+from fuzzy.operator.Input import Input
+from fuzzy.operator.Not import Not
+from fuzzy.operator.Const import Const
 
 import os
 import shutil
@@ -17,6 +21,7 @@ class GraphSystem(System):
         self.inf_input_sets = {}
         self.inf_output_all_sets = {}
         self.inf_output_merged_sets = {}
+        self.inf_output_cer_sets = {}
         self.activated_sets = {}
         self.final_sets = {}
 
@@ -26,6 +31,7 @@ class GraphSystem(System):
         self.inf_input_sets = {}
         self.inf_output_all_sets = {}
         self.inf_output_merged_sets = {}
+        self.inf_output_cer_sets = {}
         self.activated_sets = {}
         self.final_sets = {}
 
@@ -77,8 +83,20 @@ class GraphSystem(System):
             output_adj_name, output_input_name = rule.adjective.getName(self)
             inf_output_all_set = {}
             inf_output_merged_set = {}
+            inf_output_cer_set = {}
+           
+            inputs = []
+            if type(rule.operator) is Compound:
+                inputs = rule.operator.inputs
+            elif type(rule.operator) is Input:
+                inputs = [rule.operator]
+            elif type(rule.operator) is Not:
+                inputs = [rule.operator.input]
+            elif type(rule.operator) is Const: 
+                pass # ignored... not coded
+
             # get plot for each input (e.x. input_pay.low, input_rep.unnoticed) in a rule
-            for rule_input in rule.operator.inputs:
+            for rule_input in inputs:
                 adj = rule_input.adjective 
                 adj_name, input_name = adj.getName(self)
                 if input_name in self.inf_input_sets and adj_name in self.inf_input_sets[input_name]:
@@ -109,21 +127,30 @@ class GraphSystem(System):
                 l = input_name + "." + adj_name
                 out_x_min, out_x_max = doc.getGlobalMinMax(doc.getSets(self.variables[output_input_name]))
                 # Inputs norm'd via operator specified in rule.operator
-                inf_output_all = norm(rule.operator.norm, rule.adjective.set, adj.getMembership())
+                norm_to_use = Min()
+                if type(rule.operator) is Compound:
+                    norm_to_use = rule.operator.norm
+                inf_output_all = norm(norm_to_use, rule.adjective.set, adj.getMembership())
                 # Max is fine, this is for graphing purposes
                 inf_output_all = merge(Max(), inf_output_all, Polygon([(out_x_min,0.0),(out_x_max,0.0)]))
                 inf_output_all_set[l] = inf_output_all
 
+                # merged
                 if output_input_name not in inf_output_merged_set:
                     inf_output_merged_set[output_input_name] = inf_output_all
                 else:
                     # Outputs joined using norm specified by Rule
-                    inf_output_merged_set[output_input_name] = merge(rule.CER or rule.__CER, 
+                    inf_output_merged_set[output_input_name] = merge(Min(), 
                                                                      inf_output_merged_set[output_input_name], 
                                                                      inf_output_all)
             
+            inf_output_cer_set[output_input_name] = norm(rule.CER or rule.__CER,
+                                                         inf_output_merged_set[output_input_name],
+                                                         rule.certainty)
+            
             self.inf_output_all_sets[rule_name] = inf_output_all_set
             self.inf_output_merged_sets[rule_name] = inf_output_merged_set
+            self.inf_output_cer_sets[rule_name] = inf_output_cer_set
 
             # try to plot
             title = "rule_" + rule_name + "_output_all_" + output_input_name + "_" + output_adj_name
@@ -136,6 +163,12 @@ class GraphSystem(System):
             xlabel = output_input_name
             unit = self.variables[output_input_name].unit
             self.plotDoc.createDocSets(inf_output_merged_set,title,description=xlabel,units=unit)
+
+            # try to plot certainty
+            title = "rule_" + rule_name + "_output_cer_" + output_input_name + "_" + output_adj_name
+            xlabel = output_input_name
+            unit = self.variables[output_input_name].unit
+            self.plotDoc.createDocSets(inf_output_cer_set,title,description=xlabel,units=unit)
 
     def defuzzify(self, output):
         super(GraphSystem, self).defuzzify(output)

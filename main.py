@@ -52,7 +52,7 @@ def main(argv):
 
     users = employee_data.getEmployeeData()
     companies = company_data.getCompanyData()
-    controller = Controller(users[0], useGraphSystem=False);
+    controller = Controller(users[5], useGraphSystem=True)
 
     exit = False
     for opt, arg in opts:
@@ -67,12 +67,13 @@ def main(argv):
             exit = True
     if exit: sys.exit(0)
 
-    #for company in companies:
-    #    res = controller.calculate(name=company["name"],
-    #                               salary=company["salary"],
-    #                               employees=company["employees"],
-    #                               reputation=company["reputation"])
-    #    print company["name"] + ": " + str(res)
+    for company in companies[1:1]:
+        res = controller.calculate(name=company["name"],
+                                   salary=company["salary"],
+                                   employees=company["employees"],
+                                   reputation=company["reputation"],
+                                   distance=company["distance"])
+        print company["name"] + ": " + str(res)
 
     testSystem()
 
@@ -83,28 +84,31 @@ def testSystem():
     correct = 0
 
     for user in users:
+        print user["name"]
         controller = Controller(user)
         results = 0
         results_company = []
         get = ""
         for company in companies:
-            res = controller.calculate(salary=["salary"], employees=company["employees"], reputation=company["reputation"])
+            res = controller.calculate(name=company["name"], salary=company["salary"], 
+                                       employees=company["employees"], reputation=company["reputation"],
+                                       distance=company["distance"])
             if res == results:
-            	results_company.append(company["name"])
+            	  results_company.append(company["name"])
             elif res > results:
                 results = res
                 del results_company[:]
                 results_company.append(company["name"])
-            #print company["name"] + ": " + str(res)
+            print company["name"] + ": " + str(res)
         if len(results_company) > 1:
             get = random.choice(results_company)
         else:
             get = results_company[0]
 
-        #print (get,user["expected"])
+        print "got:",get, ", expected:",user["expected"]
         if get == user["expected"]:
             correct = correct + 1
-	#print "\n"
+        print "\n"
 
     print (100.0*correct/len(users)),"% correct"
 

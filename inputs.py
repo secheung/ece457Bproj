@@ -3,6 +3,7 @@ from fuzzy.set.Polygon import Polygon
 from fuzzy.set.Trapez import Trapez
 from fuzzy.set.ZFunction import ZFunction
 from fuzzy.set.SFunction import SFunction
+from fuzzy.set.PiFunction import PiFunction
 
 from passfilter import bandpass
 from passfilter import max_extend
@@ -66,4 +67,27 @@ def generate_employee(small_low, small_high, med_low, med_high, large_low, large
         "small": employee_small,
         "med":employee_med,
         "large":employee_large
+    }
+
+def generate_commute(close, medium, far):
+    # fake medium low and high... should be fine
+    medium_low = medium - 5
+    medium_high = medium + 5
+
+    close_delta = (medium_low - close)/2.0
+    close_commute = ZFunction(close + close_delta, close_delta)
+    close_commute = max_extend(close_commute, 0.0, close)
+
+    medium_commute = Trapez(medium_low, medium_high,
+                            abs(medium_low - close),
+                            abs(far - medium_high))
+
+    far_delta = (far - medium_high)/2.0
+    far_commute = SFunction(far - far_delta, far_delta)
+    far_commute = max_extend(far_commute, far, 150.0)
+
+    return {
+        "close": close_commute,
+        "medium": medium_commute,
+        "far": far_commute
     }
