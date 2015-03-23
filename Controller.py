@@ -20,9 +20,12 @@ import happiness
 from GraphSystem import GraphSystem
 
 class Controller(object):
-    def __init__(self, user):
+    def __init__(self, user, useGraphSystem=False):
         # create system object
-        self.system = GraphSystem()
+        if useGraphSystem:
+            self.system = GraphSystem()
+        else:
+            self.system = System()
 
         # Input: Pay
         input_pay = InputVariable(fuzzify=Plain(),
@@ -196,7 +199,7 @@ class Controller(object):
             "input_rep": reputation
         }
         output_vals = {"happiness": 0.0}
-        if (type(self.system) is GraphSystem):
+        if type(self.system) is GraphSystem:
             self.system.calculate(input=input_vals, output=output_vals, input_name=name)
         else:
             self.system.calculate(input=input_vals, output=output_vals)
