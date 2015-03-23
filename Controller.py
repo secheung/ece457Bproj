@@ -9,6 +9,7 @@ from fuzzy.defuzzify.MaxLeft import MaxLeft
 from fuzzy.defuzzify.MaxRight import MaxRight
 from fuzzy.Rule import Rule
 from fuzzy.norm.FuzzyAnd import FuzzyAnd
+from fuzzy.norm.Min import Min
 from fuzzy.operator.Input import Input
 from fuzzy.operator.Compound import Compound
 from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
@@ -68,7 +69,7 @@ class Controller(object):
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
-        Happiness = OutputVariable(defuzzify=COG(segment_size=0.5,failsafe=0.0),
+        Happiness = OutputVariable(defuzzify=COG(failsafe=0.0),
                                    description="Happiness",
                                    min=0.0, max=100.0, unit="/100")
         self.system.variables["happiness"] = Happiness
@@ -81,7 +82,7 @@ class Controller(object):
 
         rule1 = Rule(
             adjective=s.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(s.variables['input_pay'].adjectives["High"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             certainty=1.0,
@@ -89,7 +90,7 @@ class Controller(object):
 
         rule2 = Rule(
             adjective=s.variables["happiness"].adjectives["Low"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(s.variables['input_pay'].adjectives["Low"]),
                               Input(s.variables['input_rep'].adjectives["Unnoticed"])),
             certainty=1.0,
@@ -97,7 +98,7 @@ class Controller(object):
 
         rule3 = Rule(
             adjective=s.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(s.variables['input_pay'].adjectives["Medium"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             certainty=1.0,
@@ -105,7 +106,7 @@ class Controller(object):
 
         rule4 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,
@@ -113,7 +114,7 @@ class Controller(object):
 
         rule5 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Medium"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Small"])),
             certainty=1.0,
@@ -121,7 +122,7 @@ class Controller(object):
 
         rule6 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Small"])),
             certainty=1.0,
@@ -129,7 +130,7 @@ class Controller(object):
 
         rule7 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Medium"])),
             certainty=1.0,
@@ -137,7 +138,7 @@ class Controller(object):
 
         rule8 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,
@@ -145,7 +146,7 @@ class Controller(object):
 
         rule9 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Small"])),
             certainty=1.0,
@@ -153,7 +154,7 @@ class Controller(object):
 
         rule10 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,
@@ -161,7 +162,7 @@ class Controller(object):
 
         rule11 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Small"])),
             certainty=1.0,
@@ -169,7 +170,7 @@ class Controller(object):
 
         rule12 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(FuzzyAnd(),
+            operator=Compound(Min(),
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,

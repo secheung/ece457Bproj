@@ -54,8 +54,8 @@ def generate_employee(small_low, small_high, med_low, med_high, large_low, large
     employee_small.add(x=med_low, y=0.0)
 
     employee_med = Trapez(med_low, med_high,
-                                  abs(med_low - small_high),
-                                  abs(large_low - med_high))
+                          abs(med_low - small_high),
+                          abs(large_low - med_high))
 
     employee_large = Polygon()
     employee_large.add(x=med_high, y = 0.0 )

@@ -4,13 +4,14 @@ from fuzzy.set.Set import Set, norm, merge
 from fuzzy.set.Polygon import Polygon
 from fuzzy.norm.Min import Min
 from fuzzy.norm.Max import Max
+from fuzzy import Rule
 
 import os
 import shutil
 
 class GraphSystem(System):
-    def __init__(self,description="",variables=None,rules=None,directory="graphsystem"):
-        super(GraphSystem, self).__init__(description=description,variables=variables,rules=rules)
+    def __init__(self,description="",rules=None,directory="graphsystem"):
+        super(GraphSystem, self).__init__(description=description)
         self.directory = directory
         self.fuzzified_sets = {}
         self.inf_input_sets = {}
@@ -53,6 +54,7 @@ class GraphSystem(System):
                 intersection = adj.getMembership() # may be None
                 if intersection:
                     # maybe incorporate segment_size... but from where?
+                    # Min should be fine
                     fuzzified_adj = norm(Min(), adj.set, intersection)
                 else:
                     # create zero line at y=0 to preserve x range (for graphing)
@@ -106,16 +108,19 @@ class GraphSystem(System):
                 # get inferenced output
                 l = input_name + "." + adj_name
                 out_x_min, out_x_max = doc.getGlobalMinMax(doc.getSets(self.variables[output_input_name]))
-                inf_output_all = norm(Min(), rule.adjective.set, adj.getMembership())
+                # Inputs norm'd via operator specified in rule.operator
+                inf_output_all = norm(rule.operator.norm, rule.adjective.set, adj.getMembership())
+                # Max is fine, this is for graphing purposes
                 inf_output_all = merge(Max(), inf_output_all, Polygon([(out_x_min,0.0),(out_x_max,0.0)]))
                 inf_output_all_set[l] = inf_output_all
 
                 if output_input_name not in inf_output_merged_set:
                     inf_output_merged_set[output_input_name] = inf_output_all
                 else:
-                    inf_output_merged_set[output_input_name] = merge(Min(), 
-                                                                   inf_output_merged_set[output_input_name], 
-                                                                   inf_output_all)
+                    # Outputs joined using norm specified by Rule
+                    inf_output_merged_set[output_input_name] = merge(rule.CER or rule.__CER, 
+                                                                     inf_output_merged_set[output_input_name], 
+                                                                     inf_output_all)
             
             self.inf_output_all_sets[rule_name] = inf_output_all_set
             self.inf_output_merged_sets[rule_name] = inf_output_merged_set
