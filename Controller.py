@@ -99,7 +99,7 @@ class Controller(object):
         #   CER=fuzzy.norm.Min.Min())
 
         rule1d1 = Rule(
-            adjective=s.variables["happiness"].adjectives["Good"],
+            adjective=s.variables["happiness"].adjectives["Goodish"],
             operator=Compound(FuzzyAnd(),
 		              Input(input_employees.adjectives["Large"]),
 		              Input(input_pay.adjectives["Good"]),
@@ -254,7 +254,7 @@ class Controller(object):
             CER=fuzzy.norm.Min.Min())
 
         rule22d2 = Rule(
-            adjective=s.variables["happiness"].adjectives["Good"],
+            adjective=s.variables["happiness"].adjectives["Goodish"],
             operator=Compound(FuzzyAnd(),
 		              Input(input_employees.adjectives["Largish"]),
 		              Input(input_pay.adjectives["Good"])
