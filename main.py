@@ -56,6 +56,7 @@ def testSystem():
     users = employee_data.getEmployeeData()
     companies = company_data.getCompanyData()
     correct = 0
+    correct2 = 0
 
     for user in users:
         controller = Controller(user)
@@ -79,9 +80,14 @@ def testSystem():
         #print (get,user["expected"])
         if get == user["expected"]:
             correct = correct + 1
+	
+        for answer in results_company:
+            if answer == user["expected"]:
+                correct2 = correct2 + 1
 	#print "\n"
 
     print (100.0*correct/len(users)),"% correct"
+    print (100.0*correct2/len(users)),"% correct contains"
 
 
 if __name__ == "__main__":
