@@ -57,11 +57,14 @@ def testSystem():
     companies = company_data.getCompanyData()
     correct = 0
     correct2 = 0
+    correct3 = 0
 
     for user in users:
         controller = Controller(user)
         results = 0
         results_company = []
+        results_company2 = []
+        results_company2_val = []
         get = ""
         for company in companies:
             res = controller.calculate(company["employees"], company["salary"], company["reputation"])
@@ -71,7 +74,22 @@ def testSystem():
                 results = res
                 del results_company[:]
                 results_company.append(company["name"])
-            #print company["name"] + ": " + str(res)
+            print company["name"] + ": " + str(res)
+            if len(results_company2) < 3:
+                results_company2.append(company["name"])
+                results_company2_val.append(res)
+            elif results_company2_val[0] < res:
+                results_company2[0] = company["name"]
+                results_company2_val[0] = res
+            elif results_company2_val[1] < res:
+                results_company2[1] = company["name"]
+                results_company2_val[1] = res
+            elif results_company2_val[2] < res:
+                results_company2[2] = company["name"]
+                results_company2_val[2] = res
+
+        print ("top",results_company2)
+        print ("not",results_company)
         if len(results_company) > 1:
             get = random.choice(results_company)
         else:
@@ -84,10 +102,15 @@ def testSystem():
         for answer in results_company:
             if answer == user["expected"]:
                 correct2 = correct2 + 1
-	#print "\n"
+
+        for answer in results_company2:
+            if answer == user["expected"]:
+                correct3 = correct3 + 1
+	print "\n"
 
     print (100.0*correct/len(users)),"% correct"
     print (100.0*correct2/len(users)),"% correct contains"
+    print (100.0*correct3/len(users)),"% correct contains top"
 
 
 if __name__ == "__main__":
