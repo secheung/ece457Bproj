@@ -5,6 +5,7 @@ from fuzzy.OutputVariable import OutputVariable
 from fuzzy.Adjective import Adjective
 from fuzzy.fuzzify.Plain import Plain
 from fuzzy.defuzzify.COG import COG
+
 from fuzzy.defuzzify.MaxLeft import MaxLeft
 from fuzzy.defuzzify.MaxRight import MaxRight
 from fuzzy.Rule import Rule
@@ -66,14 +67,14 @@ class Controller(object):
         input_rep.adjectives["Unnoticed"] = Adjective(rep["low"])
         input_rep.adjectives["Recognized"] = Adjective(rep["high"])
 
-        Happiness = OutputVariable(defuzzify=MaxLeft(),
+        Happiness = OutputVariable(defuzzify=COG(failsafe=0.0),
                                    description="Happiness",
                                    min=0.0, max=100.0)
         self.system.variables["happiness"] = Happiness
 
         Happiness.adjectives["Bad"] = Adjective(happiness.Happiness_bad)
         Happiness.adjectives["Med"] = Adjective(happiness.Happiness_med)
-        Happiness.adjectives["Good"] = Adjective(happiness.Happiness_good)
+        Happiness.adjectives["Good"] = Adjective(happiness.Happiness_high)
         Happiness.failsafe = 0.0 # let it output 0.0 if no COG available
 
         s = self.system
