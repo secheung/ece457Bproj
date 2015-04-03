@@ -82,6 +82,7 @@ def testSystem():
     users = employee_data.getEmployeeData()
     companies = company_data.getCompanyData()
     correct = 0
+    correct2 = 0
 
     for user in users:
         print user["name"]
@@ -94,7 +95,7 @@ def testSystem():
                                        employees=company["employees"],
                                        reputation=company["reputation"])
             if res == results:
-            	  results_company.append(company["name"])
+                  results_company.append(company["name"])
             elif res > results:
                 results = res
                 del results_company[:]
@@ -108,9 +109,14 @@ def testSystem():
         print "got:",get, ", expected:",user["expected"]
         if get == user["expected"]:
             correct = correct + 1
-        print "\n"
+        #print "\n"
+        for answer in results_company:
+            if answer == user["expected"]:
+                correct2 = correct2 + 1
+        #print "\n"
 
     print (100.0*correct/len(users)),"% correct"
+    print (100.0*correct2/len(users)),"% correct contains"
 
 if __name__ == "__main__":
     main(sys.argv[1:])
