@@ -16,7 +16,7 @@
 % special math formatting
 \usepackage{amsmath}
 
-\bibliographystyle{IEEETran}
+\bibliographystyle{IEEEtran}
 \begin{document}
 \begin{titlepage}
 \begin{center}
@@ -53,6 +53,8 @@ An illustrative example of a single criteria is given as follows: John believes 
   \item Given the membership function is adequate, \$61,000 per year will yield a high output
 \end{itemize}
 \end{abstract}
+\nocite{FLS_MD,FLS_KD,FLS_ANN}
+
 
 \clearpage
 \section{Introduction}
@@ -84,7 +86,7 @@ EinsteinProduct                     &                                & $\frac{(x
 \end{tabular}
 \end{table}
 
-Minimum is an operator that is used in practice for neural networks [FAKHRI]. It works well because it helps eliminate rules with no intersection with a linguistic hedge, such as a minimum wage job with the rule “If pay is high (>\$120,000) and bonus is high (>\$20,000) then happiness is high”. The intersection of the minimum wage pay and fuzzy high pay will have no intersection, thus the aggregate will be zero certainty of high happiness.
+Minimum is an operator that is used in practice for neural networks \cite{FAKHRI}. It works well because it helps eliminate rules with no intersection with a linguistic hedge, such as a minimum wage job with the rule “If pay is high (>\$120,000) and bonus is high (>\$20,000) then happiness is high”. The intersection of the minimum wage pay and fuzzy high pay will have no intersection, thus the aggregate will be zero certainty of high happiness.
 
 Maximum is very inapplicable because there is a large rule set for job happiness. Each of the inputs in a rule require consideration to account for lowered happiness.
 
@@ -120,7 +122,7 @@ From the analysis and reasoning of of the operators, the maximum (Max) operator 
 Defuzzification is important for interpreting, accurately, the expected job happiness. The options considered were centroid (center of gravity), left maxima, right maxima, and mean of maxima. Looking at only the maxima certainty is not reasonable because this completely neglects the factors creating the area of the inferenced happiness function that is less than the maximum certainty. All ranges of inferenced happiness needs to be considered, and thus centroid was chosen as the best alternative.
 
 \section{Tools}
-Our expert system is based on the pyfuzzy framework [PYFUZZYREF]. The 2D graphs and 3D graphs are generated using gnuplot [GNUPLOTREF].
+Our expert system is based on the pyfuzzy framework \cite{pyfuzzy}. The 2D graphs and 3D graphs are generated using gnuplot \cite{gnu-plot}.
 
 \section{Design Overview}
 The purpose of our system is to select the optimal job for a user based on their preferences. To accomplish this, the system takes input from a user regarding their preferences relating to the various aspects of a potential job and selects the job that will result in the user being the happiest. This is accomplished through the application of fuzzy logic to construct a expert system. Figure \ref{fig:block-diagram} provides a high level architecture for our expert system. The operations used as our baseline for each step is shown in brackets. The inputs of rules are aggregated using minimum, the final output is inferenced using maximum, and lastly the defuzzification of the happiness value is done using center of gravity.
@@ -182,7 +184,7 @@ For each of the membership functions in the initial implementation, there is no 
 
 \begin{table}[H]
   \caption{Example User’s Preferences for Pay}
-  \label{tbl:USER-PAY-REF}
+  \label{tbl:USER-PAY-PREF}
   \centering
 \begin{tabular}{|l|l|l|}
 \hline
@@ -288,7 +290,7 @@ With an increase in granularity, new rules are needed to extend the current beha
 \end{figure}
 Figure \ref{fig:EXTEND-GRAN} shows the “smallish” for employee (15 - 35) input to have dropped happiness where it should be constant across all of high pay (>\$100,000).  The extended ruleset adds the missing granularity rules to keep the behaviour of the system constant.
 
-To take advantage of the granularity, new rules are implemented to produce new behaviour in the system.  A variety of research was done to take advantage of this [GRAN\_2].  A notable example of this is the change of happiness with respect to pay.  A study by Princeton showed that it was not the amount of money that made someone happy, but rather the lack of money that would make a person sad [GRAN\_1].  With this in mind, new granularity can be used to represent this.
+To take advantage of the granularity, new rules are implemented to produce new behaviour in the system.  A variety of research was done to take advantage of this \cite{GRAN-2}.  A notable example of this is the change of happiness with respect to pay.  A study by Princeton showed that it was not the amount of money that made someone happy, but rather the lack of money that would make a person sad \cite{GRAN-1}.  With this in mind, new granularity can be used to represent this.
 
 \begin{figure}[H]
   \centering
@@ -304,6 +306,8 @@ Observing output of the membership functions, an analysis of how granularity aff
 
 For the given amount of performance increase there are great number of implementation details that need to be accounted for.  It was noticed that approximately 10 rules were implemented for the baseline implementation.  To account for the extension of rules and new behavioural rule, a total of 40 rules were needed for the granularity implementation.  If additional inputs were to be added the number of rules would vastly increase, which in turn would greatly increase the amount of time needed to implement each rule.  For the granularity analysis, only the implementation time for the rule set is considered rather than the computation complexity of rules during runtime.  Considering that even though the ruleset increases exponential to the number of inputs, a designer needs to approve and implement each rule.  The amount of rules added to the system is bounded by the amount a designer approves of.  For the amount of performance increase gained, the implementation time may not be justifiable due to the large increase in ruleset.  This however varies pending on whether or not a ruleset can cover all manner of logic for the given number of inputs.  In terms of overall performance the granularity has shown to be an overall improvement over the baseline.
 
+\nocite{GRAN-3,GRAN-4}
+
 \section{Design Improvement: Variety}
 A fuzzy system is limited in improvement for a given set of inputs.  To improve the expert system, additional inputs are considered. Certainty aspect to rule inferencing is also considered for improvements. These changes are discussed in the following subsections.
 
@@ -315,7 +319,7 @@ Experimentation with changes to the happiness values and job selection results a
 \item If commute time is far, then happiness is low
 \end{itemize}
 
-Commute time is a factor considered by many people when selecting a job, and people often talk about their commutes to work. In the baseline, commute time is neglected, making some jobs appear to have high happiness value even though the commute time is over one and a half hours one-way.  The system was tested  against a user, with somewhat average preference on commute time, who specifies commute time as: close = 10 minutes, medium = 40 minutes, and far = 70 minutes to see the change in happiness values. The results of some selected jobs can be seen in Table \ref{tbl: DISTANCE-DIFF} below.
+Commute time is a factor considered by many people when selecting a job, and people often talk about their commutes to work. In the baseline, commute time is neglected, making some jobs appear to have high happiness value even though the commute time is over one and a half hours one-way.  The system was tested  against a user, with somewhat average preference on commute time, who specifies commute time as: close = 10 minutes, medium = 40 minutes, and far = 70 minutes to see the change in happiness values. The results of some selected jobs can be seen in Table \ref{tbl:DISTANCE-DIFF} below.
 
 \begin{table}[h]
   \caption{Difference in Happiness After Considering Commute Time}
@@ -368,7 +372,7 @@ For all input membership functions, it also becomes mandatory to have a certaint
 
 \section{Results}
 \subsection{Execution Times}
-The execution time for varying rules and jobs can be seen in Table \ref{EXECUTION-TIMES} below. The tests were performed on a machine with an Intel i5-4600M with 8 GB of RAM.
+The execution time for varying rules and jobs can be seen in Table \ref{tbl:EXECUTION-TIMES} below. The tests were performed on a machine with an Intel i5-4600M with 8 GB of RAM.
 
 \begin{table}[h]
   \caption{Execution Times for Varying Number of Rules and Companies}
@@ -393,7 +397,7 @@ Testing each implementation of the system was done with a selection of people.  
 
 \begin{table}[h]
   \caption{Correctness of Expert System when Selecting One Job}
-    \label{tbl:INIT_RESULTS}
+    \label{tbl:INIT-RESULTS}
     \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
@@ -406,7 +410,7 @@ Observing Table \ref{tbl:INIT-RESULTS}, the expert job selection system has show
 
 \begin{table}[h]
   \caption{Correctness of Expert System when Selecting Top Three Jobs}
-    \label{tbl:IMPROVe_RESULTS}
+    \label{tbl:IMPROVE-RESULTS}
     \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
@@ -435,5 +439,9 @@ A sample of the graphsystem\_viewer.html can be viewed in the included sample\_g
 
 \end{appendices}
 
+
+\clearpage
+\bibliography{report}
+\addcontentsline{toc}{section}{References}
 
 \end{document}

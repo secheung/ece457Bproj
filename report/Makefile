@@ -1,7 +1,9 @@
 
 build:
 	latex report.tex
-	latex report.tex
-	pdflatex report.tex
+	bibtex report
+	latex report
+	latex report
+	pdflatex report
 
 .PHONY: build
