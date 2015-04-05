@@ -35,10 +35,10 @@ class GraphSystem(System):
         self.activated_sets = {}
         self.final_sets = {}
 
-    def calculate(self, input, output, input_name, user_name="user"):
+    def calculate(self, input, output, input_name):
         # hope that the input_name has valid filename characters...
         self.input_name = input_name.replace(' ', '_')
-        self.output_location = self.directory + "/" + user_name + "/" + self.input_name
+        self.output_location = self.directory + "/" + self.input_name
         self.saveLocation = self.output_location + "/plots"
         if not os.path.exists(self.saveLocation):
             os.makedirs(self.saveLocation)
@@ -99,18 +99,23 @@ class GraphSystem(System):
             for rule_input in inputs:
                 adj = rule_input.adjective 
                 adj_name, input_name = adj.getName(self)
-                input_set = {}
-                for key_adj_name, value_set in self.fuzzified_sets[input_name].items():
-                    if key_adj_name == adj_name:
-                        input_set[key_adj_name] = value_set
-                    else:
-                        # may be a bug here
-                        x_min, x_max = doc.getMinMax(value_set)
-                        input_set[key_adj_name] = Polygon([(x_min, 0.0),(x_max, 0.0)])
+                if input_name in self.inf_input_sets and adj_name in self.inf_input_sets[input_name]:
+                    # reuse
+                    input_set = self.inf_input_sets[input_name][adj_name]
+                else:
+                    # copy sets
+                    input_set = {}
+                    for key_adj_name, value_set in self.fuzzified_sets[input_name].items():
+                        if key_adj_name == adj_name:
+                            input_set[key_adj_name] = value_set
+                        else:
+                            # may be a bug here
+                            x_min, x_max = doc.getMinMax(value_set)
+                            input_set[key_adj_name] = Polygon([(x_min, 0.0),(x_max, 0.0)])
 
-                if input_name not in self.inf_input_sets:
-                    self.inf_input_sets[input_name] = {}
-                self.inf_input_sets[input_name][adj_name] = input_set
+                    if input_name not in self.inf_input_sets:
+                        self.inf_input_sets[input_name] = {}
+                    self.inf_input_sets[input_name][adj_name] = input_set
 
                 # try to plot
                 title = "rule_" + rule_name + "_" + input_name
@@ -118,15 +123,14 @@ class GraphSystem(System):
                 unit = self.variables[input_name].unit
                 self.plotDoc.createDocSets(input_set,title,description=xlabel,units=unit)
 
+                # get inferenced output
+                l = input_name + "." + adj_name
+                out_x_min, out_x_max = doc.getGlobalMinMax(doc.getSets(self.variables[output_input_name]))
                 # Inputs norm'd via operator specified in rule.operator
                 norm_to_use = Min()
                 if type(rule.operator) is Compound:
                     norm_to_use = rule.operator.norm
-                
-                # get inferenced output
-                l = input_name + "." + adj_name
-                out_x_min, out_x_max = doc.getGlobalMinMax(doc.getSets(self.variables[output_input_name]))
-                inf_output_all = norm(Min(), rule.adjective.set, adj.getMembership())
+                inf_output_all = norm(norm_to_use, rule.adjective.set, adj.getMembership())
                 # Max is fine, this is for graphing purposes
                 inf_output_all = merge(Max(), inf_output_all, Polygon([(out_x_min,0.0),(out_x_max,0.0)]))
                 inf_output_all_set[l] = inf_output_all
@@ -136,7 +140,7 @@ class GraphSystem(System):
                     inf_output_merged_set[output_input_name] = inf_output_all
                 else:
                     # Outputs joined using norm specified by Rule
-                    inf_output_merged_set[output_input_name] = merge(norm_to_use, 
+                    inf_output_merged_set[output_input_name] = merge(Min(), 
                                                                      inf_output_merged_set[output_input_name], 
                                                                      inf_output_all)
             
