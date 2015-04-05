@@ -21,11 +21,11 @@ users = [{#0
         "low": 3,
         "high": 4
         },
-      "commute": {
+        "commute": {
         "close": 15,
         "medium": 30,
         "far": 60
-      },
+        },
         "expected":"Acme Inc"
         },
     {#1
@@ -50,11 +50,11 @@ users = [{#0
         "low": 3,
         "high": 8
         },
-      "commute": {
+        "commute": {
         "close": 5,
         "medium": 20,
         "far": 40
-      },
+        },
         "expected":"Acme Inc"
         },
     {#2
@@ -78,12 +78,12 @@ users = [{#0
         "rep": {
         "low": 2,
         "high": 8
-        },
-      "commute": {
+    	  },
+        "commute": {
         "close": 10,
         "medium": 30,
         "far": 60
-      },
+        },
         "expected":"Smith Consulting"
         },
     {#3
@@ -108,11 +108,11 @@ users = [{#0
         "low": 5,
         "high": 7
         },
-      "commute": {
+        "commute": {
         "close": 30,
         "medium": 60,
         "far": 90
-      },
+        },
         "expected":"myPod"
         },
     {#4
@@ -137,14 +137,14 @@ users = [{#0
         "low": 4.3,
         "high": 8.5
         },
-      "commute": {
+        "commute": {
         "close": 15,
         "medium": 40,
         "far": 60
-      },
+        },
         "expected":"myPod"
         },
-    {#5, most interesting user
+    {#5
       "name": "Frank",
         "salary": {
         "bad_low": 0,
@@ -166,11 +166,11 @@ users = [{#0
         "low": 3.5,
         "high": 7.7
         },
-      "commute": {
+        "commute": {
         "close": 5,
         "medium": 30,
         "far": 60
-      },
+        },
         "expected":"not sure"
         },
     {#6
@@ -195,11 +195,11 @@ users = [{#0
         "low": 5,
         "high": 7.8
         },
-      "commute": {
+        "commute": {
         "close": 10,
         "medium": 40,
         "far": 90
-      },
+        },
         "expected":"Masterminds"
         },
     {#8
@@ -224,11 +224,11 @@ users = [{#0
         "low": 6,
         "high": 8
         },
-      "commute": {
+        "commute": {
         "close": 3,
         "medium": 25,
         "far": 60
-      },
+        },
         "expected":"myPod"
         },
     {#9
@@ -253,11 +253,11 @@ users = [{#0
         "low": 2,
         "high": 6
         },
-      "commute": {
+        "commute": {
         "close": 50,
         "medium": 90,
         "far": 120
-      },
+        },
         "expected":"Smith Consulting"
         }]
 
