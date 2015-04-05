@@ -10,6 +10,7 @@
 \usepackage{longtable}
 \usepackage[parfill]{parskip}
 \usepackage[titletoc,title]{appendix}
+\usepackage{hyperref}
 %\usepackage{mdframed}  % not availble on ubuntu
 
 % special math formatting
@@ -123,12 +124,14 @@ Our expert system is based on the pyfuzzy framework [PYFUZZYREF]. The 2D graphs 
 
 \section{Design Overview}
 The purpose of our system is to select the optimal job for a user based on their preferences. To accomplish this, the system takes input from a user regarding their preferences relating to the various aspects of a potential job and selects the job that will result in the user being the happiest. This is accomplished through the application of fuzzy logic to construct a expert system. Figure \ref{fig:block-diagram} provides a high level architecture for our expert system. The operations used as our baseline for each step is shown in brackets. The inputs of rules are aggregated using minimum, the final output is inferenced using maximum, and lastly the defuzzification of the happiness value is done using center of gravity.
-\begin{figure}[ht]
+
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.3,natwidth=1166,natheight=352]{fig/BLOCK_DIAGRAM.png}
   \caption{System Block Diagram}
   \label{fig:block-diagram}
 \end{figure}
+
 The flow of information through our system starts with collection of user input. The user’s preferences are then fed into the fuzzy logic controller which builds a set of membership functions representing the user’s preferences. These membership functions are then combined with a prebuilt rule set. The shape of the membership functions and set of rules are based on research from studies in the areas of employee happiness and engagement in the workforce. Once this has been completed, the happiness for each potential job is computed and the top 3 jobs are presented to the user.
 
 \subsection{Inputs}
@@ -140,6 +143,7 @@ From the perspective of the user, they specify a set of possible ranges for the 
 \begin{table}[h]
   \caption{Linguistic Hedges for Baseline Inputs}
   \label{tbl:LINGUISTIC-HEDGES}
+  \centering
 \begin{tabular}{|l|l|}
 \hline
 \textbf{Input} & \textbf{Linguistic Hedges} \\ \hline
