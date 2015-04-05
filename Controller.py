@@ -14,6 +14,7 @@ from fuzzy.operator.Input import Input
 from fuzzy.operator.Compound import Compound
 from fuzzy.norm.AlgebraicProduct import AlgebraicProduct
 from fuzzy.norm.AlgebraicSum import AlgebraicSum
+from fuzzy.norm.GeometricMean import GeometricMean
 
 import inputs
 import happiness
@@ -22,6 +23,8 @@ from GraphSystem import GraphSystem
 class Controller(object):
     def __init__(self, user, useGraphSystem=False):
         print "Creating system for " + user["name"]
+
+        self.user = user
 
         # create system object
         if useGraphSystem:
@@ -32,7 +35,7 @@ class Controller(object):
         # Input: Pay
         input_pay = InputVariable(fuzzify=Plain(),
                                   description="Pay",
-                                  min=0.0, max=200.0, unit="x10 ($)")
+                                  min=0.0, max=200.0, unit="x1000 ($)")
         self.system.variables["input_pay"] = input_pay
 
         user_pay = user["salary"]
@@ -105,120 +108,136 @@ class Controller(object):
 
         s = self.system
 
+        rule_inputs_norm = Min()
+        CER_norm = Min()
+        lowered_certainty = 0.7
+
         rule1 = Rule(
             adjective=s.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(s.variables['input_pay'].adjectives["High"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule2 = Rule(
             adjective=s.variables["happiness"].adjectives["Low"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(s.variables['input_pay'].adjectives["Low"]),
                               Input(s.variables['input_rep'].adjectives["Unnoticed"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule3 = Rule(
             adjective=s.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(s.variables['input_pay'].adjectives["Medium"]),
                               Input(s.variables['input_rep'].adjectives["Recognized"])),
-            certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            certainty=lowered_certainty,
+            CER=CER_norm)
 
         rule4 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Large"])),
-            certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            certainty=lowered_certainty,
+            CER=CER_norm)
 
         rule5 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Medium"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_pay.adjectives["Low"]),
                               Input(input_employees.adjectives["Small"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule6 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Small"])),
-            certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            certainty=lowered_certainty,
+            CER=CER_norm)
 
         rule7 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Medium"])),
-            certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            certainty=lowered_certainty,
+            CER=CER_norm)
 
         rule8 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_pay.adjectives["High"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule9 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Small"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule10 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_rep.adjectives["Unnoticed"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule11 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Small"])),
-            certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            certainty=lowered_certainty,
+            CER=CER_norm)
 
         rule12 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
-            operator=Compound(Min(),
+            operator=Compound(rule_inputs_norm,
                               Input(input_rep.adjectives["Recognized"]),
                               Input(input_employees.adjectives["Large"])),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         # distance rules
         rule13 = Rule(
             adjective=self.system.variables["happiness"].adjectives["High"],
             operator=Input(input_commute.adjectives["Close"]),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule14 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Medium"],
             operator=Input(input_commute.adjectives["Medium"]),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
 
         rule15 = Rule(
             adjective=self.system.variables["happiness"].adjectives["Low"],
             operator=Input(input_commute.adjectives["Far"]),
             certainty=1.0,
-            CER=fuzzy.norm.Min.Min())
+            CER=CER_norm)
+
+        rule16 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["High"],
+            operator=Input(input_rep.adjectives["Recognized"]),
+            certainty=1.0,
+            CER=CER_norm)
+            
+        rule17 = Rule(
+            adjective=self.system.variables["happiness"].adjectives["Medium"],
+            operator=Input(input_rep.adjectives["Unnoticed"]),
+            certainty=lowered_certainty,
+            CER=CER_norm)
 
         self.system.rules["highpay_recognized"] = rule1
         self.system.rules["lowpay_unnoticed"] = rule2
@@ -235,6 +254,8 @@ class Controller(object):
         self.system.rules["closedist"] = rule13
         self.system.rules["mediumdist"] = rule14
         self.system.rules["fardist"] = rule15
+        self.system.rules["recognized"] = rule16
+        self.system.rules["unnoticed"] = rule17
 
     def calculate(self, name, salary, employees, reputation, distance):
         input_vals = {
@@ -245,7 +266,7 @@ class Controller(object):
         }
         output_vals = {"happiness": 0.0}
         if type(self.system) is GraphSystem:
-            self.system.calculate(input=input_vals, output=output_vals, input_name=name)
+            self.system.calculate(input=input_vals, output=output_vals, input_name=name, user_name=self.user["name"])
         else:
             self.system.calculate(input=input_vals, output=output_vals)
 
