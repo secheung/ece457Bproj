@@ -86,7 +86,7 @@ EinsteinProduct                     &                                & $\frac{(x
 \end{tabular}
 \end{table}
 
-Minimum is an operator that is used in practice for neural networks \cite{FAKHRI}. It works well because it helps eliminate rules with no intersection with a linguistic hedge, such as a minimum wage job with the rule “If pay is high (>\$120,000) and bonus is high (>\$20,000) then happiness is high”. The intersection of the minimum wage pay and fuzzy high pay will have no intersection, thus the aggregate will be zero certainty of high happiness.
+Minimum is an operator that is used in practice for neural networks \cite{FAKHRI}. It works well because it helps eliminate rules with no intersection with a linguistic hedge, such as a minimum wage job with the rule “If pay is high ($>\$120,000$) and bonus is high ($>\$20,000$) then happiness is high”. The intersection of the minimum wage pay and fuzzy high pay will have no intersection, thus the aggregate will be zero certainty of high happiness.
 
 Maximum is very inapplicable because there is a large rule set for job happiness. Each of the inputs in a rule require consideration to account for lowered happiness.
 
@@ -98,7 +98,7 @@ The best aggregation norm operator depends on the relation between the inputs fo
 The norm operator for the combining of all rule outputs can also be changed, but only one can be selected for the whole system. There are very many possible norm operators, but only a selection of them were considered. The alternatives considered are in Table \ref{tbl:FINAL-NORM} below. The formula in the table uses two variables (x and y) to represent the certainty of two membership functions.
 
 \begin{table}[h]
-\caption{Nprm Operator Alternatives for Final Output}
+\caption{Norm Operator Alternatives for Final Output}
 \label{tbl:FINAL-NORM}
 \centering
 \begin{tabular}{|c|c|}
@@ -110,7 +110,7 @@ ArithmeticMean         & $\frac{(x+y)}{2}$ \\ \hline
 \end{tabular}
 \end{table}
 
-Maximum operator is a common choice for joining rule outputs [FAKHRI]. In English, it takes the maximum certainty of happiness from each linguistic hedge, and uses that as the inferenced output. This is reasonable because the rules used consider the significant and important aspects of job happiness. This means that whichever rules create the most certainty for happiness for each linguistic hedge, will be the standout factor for the final job happiness. The maximum operator also ignores rules that do not create any certainty of happiness, i.e. there is intersection of a rule input.
+Maximum operator is a common choice for joining rule outputs \cite{FAKHRI}. In English, it takes the maximum certainty of happiness from each linguistic hedge, and uses that as the inferenced output. This is reasonable because the rules used consider the significant and important aspects of job happiness. This means that whichever rules create the most certainty for happiness for each linguistic hedge, will be the standout factor for the final job happiness. The maximum operator also ignores rules that do not create any certainty of happiness, i.e. there is intersection of a rule input.
 
 The bounded sum operator is the second option with a slightly different theory than the standout factor theory used for the maximum operator. In bounded sum, the theory is that many factors of happiness or unhappiness lead to a greater chance of happiness. Users will always have different preferences, so happiness for one factor may not be the same for everyone. This operator leverages disjunction probability by considering that if there is some certainty of happiness for multiple factors (rules), then it is more certain that the user will be happy or unhappy for at least one of these factors. The problem with this is that the expert system can easily have very many rules, and as a result, the sum of all the rule outputs will lead to a final output of 100\% certainty for all happiness. This can be easily alleviated by putting a weight for each rule (max(1,0.5(x+y))), such as weight = 1/(number of rules).
 
@@ -137,7 +137,7 @@ The purpose of our system is to select the optimal job for a user based on their
 The flow of information through our system starts with collection of user input. The user’s preferences are then fed into the fuzzy logic controller which builds a set of membership functions representing the user’s preferences. These membership functions are then combined with a prebuilt rule set. The shape of the membership functions and set of rules are based on research from studies in the areas of employee happiness and engagement in the workforce. Once this has been completed, the happiness for each potential job is computed and the top 3 jobs are presented to the user.
 
 \subsection{Inputs}
-For our initial prototype the system allows users to specify their preferences for salary, company size and reputation. These selected inputs are a subset of all possible inputs as there are numerous inputs that our system could take [ref; Job Satisfaction] to aid in the selection of the optimal job. These specific inputs were chosen for our initial implementation because they are unique to each individual and they are all factors that have crisp values from the perspective of employer.
+For our initial prototype the system allows users to specify their preferences for salary, company size and reputation. These selected inputs are a subset of all possible inputs as there are numerous inputs that our system could take \cite{job-sat} to aid in the selection of the optimal job. These specific inputs were chosen for our initial implementation because they are unique to each individual and they are all factors that have crisp values from the perspective of employer.
 
 From the perspective of the user, they specify a set of possible ranges for the given inputs (salary, company size and reputation). For each input, the user provides a range of values for each linguistic hedge. The linguistic hedges are defined ahead of time for each input. Table \ref{tbl:LINGUISTIC-HEDGES} outlines the linguistic hedges for each input.
 
@@ -180,24 +180,24 @@ For the initial implementation our system used Trapezoid membership functions fo
   \label{fig:BRM}
 \end{figure}
 
-For each of the membership functions in the initial implementation, there is no guarantee that they will overlap. An example of this occurring can be found in Figure BPM. The user preferences that generated this membership function can be found in Table \ref{tbl:USER-PAY-PREF}.
+For each of the membership functions in the initial implementation, there is no guarantee that they will overlap. An example of this occurring can be found in Figure \ref{fig:BPM}. The user preferences that generated this membership function can be found in Table \ref{tbl:USER-PAY-PREF}.
 
 \begin{table}[H]
   \caption{Example User’s Preferences for Pay}
   \label{tbl:USER-PAY-PREF}
   \centering
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|r|r|}
 \hline
-\textbf{Linguistic Hedge} & \textbf{Low} & \textbf{High} \\ \hline
-Bad                       & 0            & 30000         \\ \hline
-Okay                      & 60000        & 70000         \\ \hline
-Good                      & 100000       & 130,00        \\ \hline
+\textbf{Linguistic Hedge} & \textbf{Low (\$)} & \textbf{High (\$)} \\ \hline
+Bad                       & 0            & 30,000         \\ \hline
+Okay                      & 60,000        & 70,000         \\ \hline
+Good                      & 100,000       & 130,000        \\ \hline
 \end{tabular}
 \end{table}
-To construct the membership function in Figure BPM, the system uses the low and high values as the end points for the rectangular portion of the trapezoid. The left and right and portions of the trapezoid are then calculated independently. In the case of the left hand side of the low and okay pay membership function the system assumes that a pay lower than the lower bound is always less preferred. For the right hand side of the low and okay pay membership functions, the system uses the heuristic that as pay increases past the high bound an increase in salary of \$5,000 is not as significant so it probably still belongs in the okay universe of discourse. High pay uses a similar heuristic; a salary of \$5,000 or \$10,000 less than the lower bound is not significant enough to remove it from the universe of discourse. This results is a shallow slope for both the right hand side of the low and okay membership functions and the left hand side of the good membership function.
+To construct the membership function in Figure \ref{fig:BPM}, the system uses the low and high values as the end points for the rectangular portion of the trapezoid. The left and right and portions of the trapezoid are then calculated independently. In the case of the left hand side of the low and okay pay membership function the system assumes that a pay lower than the lower bound is always less preferred. For the right hand side of the low and okay pay membership functions, the system uses the heuristic that as pay increases past the high bound an increase in salary of \$5,000 is not as significant so it probably still belongs in the okay universe of discourse. High pay uses a similar heuristic; a salary of \$5,000 or \$10,000 less than the lower bound is not significant enough to remove it from the universe of discourse. This results is a shallow slope for both the right hand side of the low and okay membership functions and the left hand side of the good membership function.
 
 \subsection{Rules}
-The rules for the system are static in the sense that they are defined ahead of time and are not configurable by the user or employer. Additionally, each rule only combines 2 inputs to the system. This results in a larger set of rules that are easier to read and reason about. Using the same user and membership function from Section \ref{sec:membership_fn} and the rules for the system the happiness can be graphed as a function of the inputs. The happiness as a function of pay and number of employees can be seen in Figure \ref{fig:PE}. Happiness as a function of reputation and number of employees can be seen in Figure \ref{fig:RE}. Finally, happiness as a function of reputation and pay can be seen in Figure RP.
+The rules for the system are static in the sense that they are defined ahead of time and are not configurable by the user or employer. Additionally, each rule only combines 2 inputs to the system. This results in a larger set of rules that are easier to read and reason about. Using the same user and membership function from Section \ref{sec:membership_fn} and the rules for the system the happiness can be graphed as a function of the inputs. The happiness as a function of pay and number of employees can be seen in Figure \ref{fig:PE}. Happiness as a function of reputation and number of employees can be seen in Figure \ref{fig:RE}. Finally, happiness as a function of reputation and pay can be seen in Figure \ref{fig:RP}.
 
 \begin{figure}[H]
   \centering
@@ -266,7 +266,7 @@ To account for membership functions close together management of the in between 
   \label{fig:OVERLAP}
 \end{figure}
 
-Figure \ref{fig:OVERLAP} shows an early implementation of the calculated in between membership functions.  With member functions so close together a constant happiness output is produced (The above happiness graph in Figure OVERLAP is a combination of all rules applied to the output as plotted along the number of employee inputs).  In order to avoid outputs such as Figure OVERLAP, the triangle membership function is manipulated to account for this.  The use of a triangle membership function minimizes the amount of overlap at the peak of the function.  If the ends of two membership functions are overlapped in such a way that the triangle membership function is encased in both of the two adjacent membership function, then the triangle membership function is not calculated.
+Figure \ref{fig:OVERLAP} shows an early implementation of the calculated in between membership functions.  With member functions so close together a constant happiness output is produced (The above happiness graph in Figure \ref{fig:OVERLAP} is a combination of all rules applied to the output as plotted along the number of employee inputs).  In order to avoid outputs such as Figure \ref{fig:OVERLAP}, the triangle membership function is manipulated to account for this.  The use of a triangle membership function minimizes the amount of overlap at the peak of the function.  If the ends of two membership functions are overlapped in such a way that the triangle membership function is encased in both of the two adjacent membership function, then the triangle membership function is not calculated.
 
 Special interest is given to the reputation input and its calculated membership function.  The initial implementation of the reputation membership function had only two membership functions to represent good and bad reputation.  To account for a larger variety of rules, rather than implementing a static triangle function where the peak sits between the middle of the two ends of the membership functions, a skew is implemented instead.
 
@@ -288,7 +288,7 @@ With an increase in granularity, new rules are needed to extend the current beha
   \caption{Unextended ruleset for pay and employee size}
   \label{fig:EXTEND-GRAN}
 \end{figure}
-Figure \ref{fig:EXTEND-GRAN} shows the “smallish” for employee (15 - 35) input to have dropped happiness where it should be constant across all of high pay (>\$100,000).  The extended ruleset adds the missing granularity rules to keep the behaviour of the system constant.
+Figure \ref{fig:EXTEND-GRAN} shows the “smallish” for employee (15 - 35) input to have dropped happiness where it should be constant across all of high pay ($>\$100,000$).  The extended ruleset adds the missing granularity rules to keep the behaviour of the system constant.
 
 To take advantage of the granularity, new rules are implemented to produce new behaviour in the system.  A variety of research was done to take advantage of this \cite{GRAN-2}.  A notable example of this is the change of happiness with respect to pay.  A study by Princeton showed that it was not the amount of money that made someone happy, but rather the lack of money that would make a person sad \cite{GRAN-1}.  With this in mind, new granularity can be used to represent this.
 
@@ -415,7 +415,7 @@ Observing Table \ref{tbl:INIT-RESULTS}, the expert job selection system has show
 \begin{tabular}{|l|l|l|l|}
 \hline
                             & \textbf{Baseline} & \textbf{Granularity} & \textbf{Variety} \\ \hline
-\textbf{Percentage correct} & 11.11\%           & 33.33\%              & 11.11\%          \\ \hline
+\textbf{Percentage correct} & 44.44\%           & 67.00\%              & 47.00\%          \\ \hline
 \end{tabular}
 \end{table}
 
@@ -429,6 +429,7 @@ To compensate for this all jobs and their happiness values will be displayed to 
 \section{Conclusion}
 The complexities of selecting a job would require a great amount of detail and implementation.  The system that was developed does not perform optimally for this goal.  It was found to perform poorly when selecting the best job for the user.  It performed better when the system’s top 3 results would contain the expected results.  As such this system is better as a filter for bad jobs, rather than a selector for the best job.  The system will be modified to display all jobs with their happiness value.  This will allow the user to decide which job he/she believes is appropriate with the opinion of the job system.  With the performance improvements found using granularity and additional inputs, the system could be improved by combining to two implementations.  Continued iterations of designing the system where additional logic and detail are added each time, will eventually produce a system that is able to select the best job for a candidate.  This however may lead to increased implementation time and require more effort on both the programmer, designer, and job happiness research.  As an initial implementation, our system is best suited as an advisement system.
 
+\clearpage
 \begin{appendices}
 \section{Additional Features}
 In effort to better analyze the resulting happiness from each rules, an automated graphing system was added for our system. As each job is run through our system, graphs are created to show the procedures of our fuzzy logic system. There are graphs for the user’s custom membership functions, fuzzified membership functions, rules, and inferenced output. A HTML file, graphsystem\_viewer.html, with all of the graphs presented in a logical format is created and can be used to view the results of each job. The code can be found in the included variety\_implementation folder.
