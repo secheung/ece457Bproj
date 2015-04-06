@@ -69,6 +69,7 @@ The norm operators are variable for the aggregation of inputs for each individua
 
 A selection of operator alternatives considered for input aggregation is shown in Table \ref{tbl:INPUT-AGGREGATION} below. The formula in the table uses two variables (x and y) to represent the certainty of two input membership functions being aggregated.
 
+{\renewcommand{\arraystretch}{1.7}
 \begin{table}[H]
   \caption{Norm Operator Alternatives for Rules}
   \label{tbl:INPUT-AGGREGATION}
@@ -81,9 +82,10 @@ Max                                 &                                & $\text{ma
 AlgebraicProduct                    &                                & $x \times y$                                          \\ \hline
 ArithmeticMean                      &                                & $\frac{(x+y)}{2}$                                 \\ \hline%
 FuzzyAnd                            & $\text{Weight} = p (0-1)$      & $(1-p) \times min(x,y) + p \times \frac{(x+y)}{2}$ \\ \hline
-EinsteinProduct                     &                                & $\frac{(x \times y)}{(1 + (1 - x)\times(1-y))}$       \\ \hline
+EinsteinProduct                     &                                & $\frac{(x \times y)}{(1 + (1 - x)\times(1-y))}$       \\[3pt] \hline
 \end{tabular}
 \end{table}
+}
 
 Minimum is an operator that is used in practice for neural networks \cite{FAKHRI}. It works well because it helps eliminate rules with no intersection with a linguistic hedge, such as a minimum wage job with the rule “If pay is high ($>\$120,000$) and bonus is high ($>\$20,000$) then happiness is high”. The intersection of the minimum wage pay and fuzzy high pay will have no intersection, thus the aggregate will be zero certainty of high happiness.
 
